@@ -1,15 +1,47 @@
 {
-    "name": "jmap-client-ts",
-    "scripts": {
-        "test": "mocha -r ts-node/register **/*.spec.ts"
-    },
-    "dependencies": {
-        "@types/mocha": "8.0.3",
-        "@types/node": "14.11.2",
-        "typescript": "3.4.3"
-    },
-    "devDependencies": {
-        "mocha": "8.1.3",
-        "ts-node": "9.0.0"
-    }
+  "name": "jmap-client-ts",
+  "version": "1.0.0",
+  "description": "Jmap Library in Typescript",
+  "main": "jmap-client-ts.js",
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "lint": "tslint -p tsconfig.json",
+    "test": "mocha -r ts-node/register -r jsdom-global/register **/*.spec.ts",
+    "prepare": "npm run build",
+    "prePublish": "npm run build"
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "directories": {
+    "lib": "src",
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OpenPaaS-Suite/jmap-client-ts.git"
+  },
+  "keywords": [
+    "jmap"
+  ],
+  "author": "Alexandre Lagane",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/OpenPaaS-Suite/jmap-client-ts/issues"
+  },
+  "homepage": "https://github.com/OpenPaaS-Suite/jmap-client-ts#README.md",
+  "devDependencies": {
+    "@types/chai": "4.1.3",
+    "@types/mocha": "8.0.3",
+    "chai": "4.2.0",
+    "jsdom": "16.4.0",
+    "jsdom-global": "3.0.2",
+    "mocha": "8.1.3",
+    "prettier": "2.1.2",
+    "ts-node": "9.0.0",
+    "tslint": "6.1.3",
+    "tslint-config-prettier": "1.18.0",
+    "typescript": "4.0.3"
+  }
 }
