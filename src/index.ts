@@ -59,10 +59,28 @@ export class Client {
     return this.session;
   }
 
+  public getAccountIds(): string[] {
+    const session = this.getSession();
+
+    return Object.keys(session.accounts);
+  }
+
+  public getFirstAccountId(): string {
+    const accountIds = this.getAccountIds();
+
+    if (accountIds.length === 0) {
+      throw new Error(
+        'No account available for this session'
+      );
+    }
+
+    return accountIds[0];
+  }
+
   public mailbox_get(
     args: IGetArguments<IMailboxProperties>
   ): Promise<{
-    accountId: string;
+    accountId: string | null;
     state: string;
     list: IMailbox[];
     notFound: string;
@@ -86,13 +104,25 @@ export class Client {
       }>(
         apiUrl,
         {
-          using: this.session?.capabilities
-            ? Object.keys(this.session.capabilities)
-            : this.DEFAULT_USING,
-          methodCalls: [['Mailbox/get', args, '0']],
+          using: this.getCapabilities(),
+          methodCalls: [['Mailbox/get', this.replaceAccountId(args), '0']],
         },
         this.httpHeaders
       )
       .then((response) => response.methodResponses[0][1]);
+  }
+
+  private replaceAccountId<U extends { accountId: string }>(input: U): U {
+    return {
+      ...input,
+      accountId:
+        input.accountId !== null ? input.accountId : this.getFirstAccountId(),
+    };
+  }
+
+  private getCapabilities() {
+    return this.session?.capabilities
+      ? Object.keys(this.session.capabilities)
+      : this.DEFAULT_USING;
   }
 }
