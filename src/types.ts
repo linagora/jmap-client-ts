@@ -139,7 +139,7 @@ export interface IMailboxGetResponse {
   accountId: string | null;
   state: string;
   list: IMailbox[];
-  notFound: string;
+  notFound: string[];
 }
 
 export interface IMaiboxEmailList {
@@ -230,5 +230,5 @@ export interface IEmailGetResponse {
   accountId: string | null;
   state: string;
   list: IEmailProperties[];
-  notFound: string;
+  notFound: string[];
 }

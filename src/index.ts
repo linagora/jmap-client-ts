@@ -1,5 +1,15 @@
 import { HttpRequest } from './http-request';
-import { IEmailFilterCondition, IEmailGetResponse, IEmailProperties, IEmailQueryResponse, IGetArguments, IMailboxGetResponse, IMailboxProperties, IQueryArguments, ISession } from './types';
+import {
+  IEmailFilterCondition,
+  IEmailGetResponse,
+  IEmailProperties,
+  IEmailQueryResponse,
+  IGetArguments,
+  IMailboxGetResponse,
+  IMailboxProperties,
+  IQueryArguments,
+  ISession,
+} from './types';
 
 export class Client {
   private readonly DEFAULT_USING = [
@@ -69,9 +79,7 @@ export class Client {
     const accountIds = this.getAccountIds();
 
     if (accountIds.length === 0) {
-      throw new Error(
-        'No account available for this session'
-      );
+      throw new Error('No account available for this session');
     }
 
     return accountIds[0];
@@ -84,13 +92,7 @@ export class Client {
     return this.httpRequest
       .post<{
         sessionState: string;
-        methodResponses: [
-          [
-            'Mailbox/get',
-            IMailboxGetResponse,
-            string
-          ]
-        ];
+        methodResponses: [['Mailbox/get', IMailboxGetResponse, string]];
       }>(
         apiUrl,
         {
@@ -108,15 +110,9 @@ export class Client {
     const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
     return this.httpRequest
       .post<{
-      sessionState: string;
-      methodResponses: [
-        [
-          'Email/query',
-          IEmailQueryResponse,
-          string
-        ]
-      ];
-    }>(
+        sessionState: string;
+        methodResponses: [['Email/query', IEmailQueryResponse, string]];
+      }>(
         apiUrl,
         {
           using: this.getCapabilities(),
@@ -134,13 +130,7 @@ export class Client {
     return this.httpRequest
       .post<{
         sessionState: string;
-        methodResponses: [
-          [
-            'Email/get',
-            IEmailGetResponse,
-            string
-          ]
-        ];
+        methodResponses: [['Email/get', IEmailGetResponse, string]];
       }>(
         apiUrl,
         {
