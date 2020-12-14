@@ -68,7 +68,7 @@ export interface IEmailProperties {
   blobId: string;
   threadId: string;
   mailboxIds: { [key: string]: boolean };
-  keywords: { [key: string]: boolean };
+  keywords: IEmailKeywords;
   from: IEmailAddress[] | null;
   to: IEmailAddress[] | null;
   subject: string;
@@ -79,6 +79,18 @@ export interface IEmailProperties {
   createdModSeq: number;
   updatedModSeq: number;
   deleted: Date | null;
+  receivedAt: Date;
+}
+
+export interface IEmailKeywords {
+  $draft?: boolean;
+  $seen?: boolean;
+  $flagged?: boolean;
+  $answered?: boolean;
+  $forwarded?: boolean;
+  $phishing?: boolean;
+  $junk?: boolean;
+  $notjunk?: boolean;
 }
 
 export interface IEmailAddress {
