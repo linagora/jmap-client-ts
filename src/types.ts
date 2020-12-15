@@ -72,25 +72,26 @@ export interface IEmailProperties {
   from: IEmailAddress[] | null;
   to: IEmailAddress[] | null;
   subject: string;
-  date: Date;
   size: number;
   preview: string;
   attachments: Attachment[] | null;
   createdModSeq: number;
   updatedModSeq: number;
-  deleted: Date | null;
-  receivedAt: Date;
+  receivedAt: IUtcDate;
 }
 
+export type IUtcDate = string;
+export type ITrue = true;
+
 export interface IEmailKeywords {
-  $draft?: boolean;
-  $seen?: boolean;
-  $flagged?: boolean;
-  $answered?: boolean;
-  $forwarded?: boolean;
-  $phishing?: boolean;
-  $junk?: boolean;
-  $notjunk?: boolean;
+  $draft?: ITrue;
+  $seen?: ITrue;
+  $flagged?: ITrue;
+  $answered?: ITrue;
+  $forwarded?: ITrue;
+  $phishing?: ITrue;
+  $junk?: ITrue;
+  $notjunk?: ITrue;
 }
 
 export interface IEmailAddress {
