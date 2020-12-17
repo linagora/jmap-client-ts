@@ -1,5 +1,15 @@
 import { HttpRequest } from './http-request';
-import { IGetArguments, IMailbox, IMailboxProperties, ISession } from './types';
+import {
+  IEmailFilterCondition,
+  IEmailGetResponse,
+  IEmailProperties,
+  IEmailQueryResponse,
+  IGetArguments,
+  IMailboxGetResponse,
+  IMailboxProperties,
+  IQueryArguments,
+  ISession,
+} from './types';
 
 export class Client {
   private readonly DEFAULT_USING = [
@@ -69,9 +79,7 @@ export class Client {
     const accountIds = this.getAccountIds();
 
     if (accountIds.length === 0) {
-      throw new Error(
-        'No account available for this session'
-      );
+      throw new Error('No account available for this session');
     }
 
     return accountIds[0];
@@ -79,33 +87,55 @@ export class Client {
 
   public mailbox_get(
     args: IGetArguments<IMailboxProperties>
-  ): Promise<{
-    accountId: string | null;
-    state: string;
-    list: IMailbox[];
-    notFound: string;
-  }> {
+  ): Promise<IMailboxGetResponse> {
     const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
     return this.httpRequest
       .post<{
         sessionState: string;
-        methodResponses: [
-          [
-            'Mailbox/get',
-            {
-              accountId: string;
-              state: string;
-              list: IMailbox[];
-              notFound: string;
-            },
-            string
-          ]
-        ];
+        methodResponses: [['Mailbox/get', IMailboxGetResponse, string]];
       }>(
         apiUrl,
         {
           using: this.getCapabilities(),
           methodCalls: [['Mailbox/get', this.replaceAccountId(args), '0']],
+        },
+        this.httpHeaders
+      )
+      .then((response) => response.methodResponses[0][1]);
+  }
+
+  public email_query(
+    args: IQueryArguments<IEmailFilterCondition>
+  ): Promise<IEmailQueryResponse> {
+    const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
+    return this.httpRequest
+      .post<{
+        sessionState: string;
+        methodResponses: [['Email/query', IEmailQueryResponse, string]];
+      }>(
+        apiUrl,
+        {
+          using: this.getCapabilities(),
+          methodCalls: [['Email/query', this.replaceAccountId(args), '0']],
+        },
+        this.httpHeaders
+      )
+      .then((response) => response.methodResponses[0][1]);
+  }
+
+  public email_get(
+    args: IGetArguments<IEmailProperties>
+  ): Promise<IEmailGetResponse> {
+    const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
+    return this.httpRequest
+      .post<{
+        sessionState: string;
+        methodResponses: [['Email/get', IEmailGetResponse, string]];
+      }>(
+        apiUrl,
+        {
+          using: this.getCapabilities(),
+          methodCalls: [['Email/get', this.replaceAccountId(args), '0']],
         },
         this.httpHeaders
       )

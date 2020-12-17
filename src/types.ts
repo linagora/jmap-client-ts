@@ -1,5 +1,7 @@
 export interface ITypeMap {
   ['Mailbox/get']: IMailbox;
+  ['Email/query']: string[];
+  ['Email/get']: IEmailProperties;
 }
 
 /**
@@ -15,6 +17,11 @@ export interface IGetArguments<Properties> {
   accountId: string;
   ids: string[] | null;
   properties?: Properties[];
+}
+
+export interface IQueryArguments<FilterCondition> {
+  accountId: string;
+  filter?: FilterCondition;
 }
 
 export interface IRequest {
@@ -52,28 +59,44 @@ export interface ISession {
   state: string;
 }
 
-export type Emailer = string;
-
 export type EmailHeader = string;
 
 export type Attachment = File;
 
-export interface IEmail {
+export interface IEmailProperties {
   id: string;
   blobId: string;
   threadId: string;
   mailboxIds: { [key: string]: boolean };
-  keywords: { [key: string]: boolean };
-  from: Emailer[] | null;
-  to: Emailer[] | null;
+  keywords: IEmailKeywords;
+  from: IEmailAddress[] | null;
+  to: IEmailAddress[] | null;
   subject: string;
-  date: Date;
   size: number;
   preview: string;
   attachments: Attachment[] | null;
   createdModSeq: number;
   updatedModSeq: number;
-  deleted: Date | null;
+  receivedAt: IUtcDate;
+}
+
+export type IUtcDate = string;
+export type ITrue = true;
+
+export interface IEmailKeywords {
+  $draft?: ITrue;
+  $seen?: ITrue;
+  $flagged?: ITrue;
+  $answered?: ITrue;
+  $forwarded?: ITrue;
+  $phishing?: ITrue;
+  $junk?: ITrue;
+  $notjunk?: ITrue;
+}
+
+export interface IEmailAddress {
+  name: string;
+  email: string;
 }
 
 export interface IThreadEmail {
@@ -123,6 +146,13 @@ export interface IMailboxProperties {
   totalThreads: number;
   unreadThreads: number;
   deleted?: Date;
+}
+
+export interface IMailboxGetResponse {
+  accountId: string | null;
+  state: string;
+  list: IMailbox[];
+  notFound: string[];
 }
 
 export interface IMaiboxEmailList {
@@ -193,4 +223,25 @@ export interface IEmailBodyPart {
   attachments: IEmailBodyPart[];
   hasAttachment: boolean;
   preview: string;
+}
+
+export interface IEmailFilterCondition {
+  inMailbox: string;
+}
+
+export interface IEmailQueryResponse {
+  accountId: string;
+  queryState: string;
+  canCalculateChanges: boolean;
+  position: number;
+  ids: string[];
+  total?: number;
+  limit?: number;
+}
+
+export interface IEmailGetResponse {
+  accountId: string | null;
+  state: string;
+  list: IEmailProperties[];
+  notFound: string[];
 }
