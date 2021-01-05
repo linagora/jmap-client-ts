@@ -22,6 +22,8 @@ export interface IGetArguments<Properties> {
 export interface IQueryArguments<FilterCondition> {
   accountId: string;
   filter?: FilterCondition;
+  position?: number;
+  limit?: number;
 }
 
 export interface IRequest {
