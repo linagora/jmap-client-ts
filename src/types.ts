@@ -19,6 +19,12 @@ export interface IGetArguments<Properties> {
   properties?: Properties[];
 }
 
+export interface ISetArguments<CreatedObject> {
+  accountId: string;
+  ifInState?: string | null;
+  create?: { [temporaryId: string]: CreatedObject };
+}
+
 export interface IQueryArguments<FilterCondition> {
   accountId: string;
   filter?: FilterCondition;
@@ -63,21 +69,26 @@ export type EmailHeader = string;
 
 export type Attachment = File;
 
+// Todo kaheks Set Get
 export interface IEmailProperties {
-  id: string;
-  blobId: string;
-  threadId: string;
+  id?: string;
+  blobId?: string;
+  threadId?: string;
   mailboxIds: { [key: string]: boolean };
   keywords: IEmailKeywords;
-  from: IEmailAddress[] | null;
-  to: IEmailAddress[] | null;
-  subject: string;
-  size: number;
-  preview: string;
+  from?: IEmailAddress[] | null;
+  to?: IEmailAddress[] | null;
+  subject?: string;
+  size?: number;
+  preview?: string;
   attachments: Attachment[] | null;
-  createdModSeq: number;
-  updatedModSeq: number;
-  receivedAt: IUtcDate;
+  createdModSeq?: number;
+  updatedModSeq?: number;
+  receivedAt?: IUtcDate;
+  textBody: IEmailBodyPart[];
+  bodyValues: {
+    [bodyPartId: string]: IEmailBodyValue
+  };
 }
 
 export type IUtcDate = string;
@@ -202,27 +213,27 @@ export interface IEmailBodyValue {
   isEncodingProblem: boolean;
   isTruncated: boolean;
 }
-
+// Todo kaheks Set Get
 export interface IEmailBodyPart {
-  partId: string;
-  blobId: string;
-  size: number;
+  partId?: string;
+  blobId?: string;
+  size?: number;
   headers: EmailHeader[];
-  name: string | null;
+  name?: string | null;
   type: string;
-  charset: string | null;
-  disposition: string | null;
-  cid: string | null;
-  language: string[] | null;
-  location: string | null;
-  subParts: IEmailBodyPart[] | null;
+  charset?: string | null;
+  disposition?: string | null;
+  cid?: string | null;
+  language?: string[] | null;
+  location?: string | null;
+  subParts?: IEmailBodyPart[] | null;
   bodyStructure: IEmailBodyPart;
   bodyValues: { [key: string]: IEmailBodyValue };
   textBody: IEmailBodyPart[]; // text/plain
   htmlBody: IEmailBodyPart[]; // text/html
   attachments: IEmailBodyPart[];
-  hasAttachment: boolean;
-  preview: string;
+  hasAttachment?: boolean;
+  preview?: string;
 }
 
 export interface IEmailFilterCondition {
@@ -244,4 +255,13 @@ export interface IEmailGetResponse {
   state: string;
   list: IEmailProperties[];
   notFound: string[];
+}
+
+export interface IEmailSetResponse<SetObject> {
+  accountId: string | null;
+  oldState?: string | null;
+  newState: string;
+  created?: { [key: string]: SetObject } | null;
+  updated?: { [key: string]: SetObject | null } | null;
+  destroyed?: string[] | null;
 }
