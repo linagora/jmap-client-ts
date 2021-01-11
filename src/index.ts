@@ -3,6 +3,7 @@ import {
   IEmailFilterCondition,
   IEmailGetResponse,
   IEmailProperties,
+  IEmailSetProperties,
   IEmailQueryResponse,
   IEmailSetResponse,
   IGetArguments,
@@ -145,7 +146,7 @@ export class Client {
   }
 
   public email_set(
-      args: ISetArguments<IEmailProperties>
+      args: ISetArguments<IEmailSetProperties>
   ): Promise<IEmailSetResponse<IEmailProperties>> {
     const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
     return this.httpRequest
