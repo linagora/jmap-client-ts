@@ -93,7 +93,7 @@ export interface IEmailSetProperties {
   to: IEmailAddress[] | null;
   subject: string;
   attachments: Attachment[] | null;
-  textBody: IEmailBodyPart[];
+  textBody: IEmailSetBodyPart[];
   bodyValues: {
     [bodyPartId: string]: IEmailBodyValue
   };
