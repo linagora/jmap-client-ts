@@ -10,7 +10,8 @@ import {
   IMailboxGetResponse,
   IQueryArguments,
   ISession,
-  ISetArguments, IGetEmailArguments,
+  ISetArguments,
+  IGetEmailArguments,
 } from './types';
 
 export class Client {
