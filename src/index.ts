@@ -8,10 +8,10 @@ import {
   IEmailSetResponse,
   IGetArguments,
   IMailboxGetResponse,
-  IMailboxProperties,
   IQueryArguments,
   ISession,
   ISetArguments,
+  IGetEmailArguments,
 } from './types';
 
 export class Client {
@@ -89,7 +89,7 @@ export class Client {
   }
 
   public mailbox_get(
-    args: IGetArguments<IMailboxProperties>
+    args: IGetArguments
   ): Promise<IMailboxGetResponse> {
     const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
     return this.httpRequest
@@ -127,7 +127,7 @@ export class Client {
   }
 
   public email_get(
-    args: IGetArguments<IEmailProperties>
+    args: IGetEmailArguments
   ): Promise<IEmailGetResponse> {
     const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
     return this.httpRequest
