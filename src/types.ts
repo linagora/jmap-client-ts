@@ -7,11 +7,7 @@ export interface ITypeMap {
 /**
  * [ name, arguments, id ]
  */
-export type IMethodCall = [
-  keyof ITypeMap,
-  { [argumentName: string]: any },
-  string
-];
+export type IMethodCall = [keyof ITypeMap, { [argumentName: string]: any }, string];
 
 export interface IGetArguments<Properties> {
   accountId: string;

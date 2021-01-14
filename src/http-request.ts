@@ -3,9 +3,9 @@ export class HttpRequest {
 
   public post<ResponseType>(
     url: string,
-    content: object,
-    headers: { [headerName: string]: string }
-  ) {
+    content: any,
+    headers: { [headerName: string]: string },
+  ): Promise<ResponseType> {
     return this.request<ResponseType>({
       url,
       method: 'POST',
@@ -16,8 +16,8 @@ export class HttpRequest {
 
   public get<ResponseType>(
     url: string,
-    headers: { [headerName: string]: string }
-  ) {
+    headers: { [headerName: string]: string },
+  ): Promise<ResponseType> {
     return this.request<ResponseType>({ url, method: 'GET', headers });
   }
 
@@ -29,7 +29,7 @@ export class HttpRequest {
   }: {
     url: string;
     method: 'POST' | 'GET';
-    body?: object;
+    body?: any;
     headers: { [headerName: string]: string };
   }): Promise<ResponseType> {
     return new Promise((resolve, reject) => {
@@ -50,7 +50,7 @@ export class HttpRequest {
         }
       };
 
-      request.onerror = (event) => {
+      request.onerror = event => {
         reject(event);
       };
 
