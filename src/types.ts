@@ -19,6 +19,12 @@ export interface IGetArguments<Properties> {
   properties?: Properties[];
 }
 
+export interface ISetArguments<CreatedObject> {
+  accountId: string;
+  ifInState?: string | null;
+  create?: { [temporaryId: string]: CreatedObject };
+}
+
 export interface IQueryArguments<FilterCondition> {
   accountId: string;
   filter?: FilterCondition;
@@ -78,6 +84,19 @@ export interface IEmailProperties {
   createdModSeq: number;
   updatedModSeq: number;
   receivedAt: IUtcDate;
+}
+
+export interface IEmailSetProperties {
+  mailboxIds: { [key: string]: boolean };
+  keywords: IEmailKeywords;
+  from: IEmailAddress[] | null;
+  to: IEmailAddress[] | null;
+  subject: string;
+  attachments: Attachment[] | null;
+  textBody: IEmailSetBodyPart[];
+  bodyValues: {
+    [bodyPartId: string]: IEmailBodyValue
+  };
 }
 
 export type IUtcDate = string;
@@ -225,6 +244,11 @@ export interface IEmailBodyPart {
   preview: string;
 }
 
+export interface IEmailSetBodyPart {
+  partId: string;
+  type: string;
+}
+
 export interface IEmailFilterCondition {
   inMailbox: string;
 }
@@ -244,4 +268,13 @@ export interface IEmailGetResponse {
   state: string;
   list: IEmailProperties[];
   notFound: string[];
+}
+
+export interface IEmailSetResponse<SetObject> {
+  accountId: string | null;
+  oldState?: string | null;
+  newState: string;
+  created?: { [key: string]: SetObject } | null;
+  updated?: { [key: string]: SetObject | null } | null;
+  destroyed?: string[] | null;
 }
