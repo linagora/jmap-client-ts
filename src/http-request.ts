@@ -21,7 +21,7 @@ export class HttpRequest {
     return this.request<ResponseType>({ url, method: 'GET', headers });
   }
 
-  private request<ResponseType>({
+  public request<ResponseType>({
     url,
     method,
     body,
