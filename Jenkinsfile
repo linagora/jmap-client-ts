@@ -6,11 +6,11 @@ pipeline {
         stage('Test') {
             steps {
                 docker.image('node:15.6.0-alpine3.10').withRun('-e DOCKER_HOST=tcp://docker:2375') {
-                sh 'whoami ||true'
-                sh 'uname -a'
-                sh 'npm install'
-                sh 'npm run lint'
-                sh 'npm run test'
+                  sh 'whoami ||true'
+                  sh 'uname -a'
+                  sh 'npm install'
+                  sh 'npm run lint'
+                  sh 'npm run test'
               }
             }
         }
