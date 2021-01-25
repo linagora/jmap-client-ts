@@ -12,13 +12,11 @@ pipeline {
 
       steps {
         script {
-          docker.withServer('tcp://docker:2375') {
-            docker.image('node:12.20.1-buster').inside {
+            docker.image('node:12.20.1-buster').args('-e DOCKER_HOST=$DOCKER_HOST').inside {
               sh 'npm install'
               sh 'npm run lint'
               sh 'npm run test'
             }
-          }
         }
       }
 
