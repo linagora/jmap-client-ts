@@ -12,7 +12,7 @@ pipeline {
 
       steps {
         script {
-            docker.image('node:12.20.1-buster').withRun('-e DOCKER_HOST=tcp://docker:2375') {
+            docker.image('node:15.6.0-alpine3.10').withRun('-e DOCKER_HOST=tcp://docker:2375') {
               sh 'npm install'
               sh 'npm run lint'
               sh 'npm run test'
