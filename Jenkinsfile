@@ -1,18 +1,16 @@
-pipeline {
-    agent {
-        docker { image 'docker:19.03.12-dind' }
-    }
-    stages {
-        stage('Test') {
-            steps {
-                docker.image('node:15.6.0-alpine3.10').withRun('-e DOCKER_HOST=tcp://docker:2375') {
-                  sh 'whoami ||true'
-                  sh 'uname -a'
-                  sh 'npm install'
-                  sh 'npm run lint'
-                  sh 'npm run test'
-              }
-            }
+node {
+    docker.image('docker:19.03.12-dind').withRun('-e "TEST=test"') { c ->
+        docker.image('docker:19.03.12-dind').inside("--link ${c.id}:dind") {
+            /* Wait until mysql service is up */
+            //sh 'while ! mysqladmin ping -hdb --silent; do sleep 1; done'
+            sh 'pwd'
+        }
+        docker.image('node:15.6.0-alpine3.10').inside("--link ${c.id}:dind") {
+            sh 'whoami ||true'
+            sh 'uname -a'
+            sh 'npm install'
+            sh 'npm run lint'
+            sh 'npm run test'
         }
     }
 }
