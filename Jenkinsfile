@@ -4,17 +4,19 @@ pipeline {
   stages {
     stage('Install packages & lint & run tests') {
       agent {
-        dockerfile {
-          filename 'Dockerfile.test'
-          args '-v /var/run/docker.sock:/var/run/docker.sock'
+        docker {
+          image 'docker:19.03.12-dind'
+          args '-e DOCKER_HOST=$DOCKER_HOST'
         }
-      }
 
       steps {
-        sh 'ls -ail /var/run/docker.sock'
-        sh 'npm install'
-        sh 'npm run lint'
-        sh 'npm run test'
+        script {
+          docker.image('node:12.20.1-buster').inside {
+            sh 'npm install'
+            sh 'npm run lint'
+            sh 'npm run test'
+          }
+        }
       }
 
       post {
