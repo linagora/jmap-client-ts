@@ -6,7 +6,7 @@ pipeline {
       agent {
         docker {
           image 'docker:19.03.12-dind'
-          args '-e DOCKER_HOST=$DOCKER_HOST -v /var/run/docker.sock:/var/run/docker.sock -v /etc/passwd:/etc/passwd:ro'
+          args '-e DOCKER_HOST=tcp://docker:2375'
         }
       }
 
