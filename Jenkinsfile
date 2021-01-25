@@ -1,4 +1,21 @@
 pipeline {
+    agent {
+        docker { image 'node:14-alpine' }
+    }
+    stages {
+        stage('Test') {
+            steps {
+                sh 'node --version'
+                sh 'npm --version'
+            }
+        }
+    }
+}
+
+
+/*pipeline {
+  agent none
+
   stages {
     stage('Install packages & lint & run tests') {
       agent {
@@ -11,8 +28,6 @@ pipeline {
       steps {
         script {
             docker.image('node:15.6.0-alpine3.10').withRun('-e DOCKER_HOST=tcp://docker:2375') {
-              //sh 'node -v'
-              //sh 'docker ps -a'
               sh 'npm install'
               sh 'npm run lint'
               sh 'npm run test'
@@ -22,12 +37,12 @@ pipeline {
 
       post {
         always {
-          deleteDir() /* clean up our workspace */
+          deleteDir() 
         }
       }
     }
   }
-}
+}*/
 
 // pipeline{
 //    agent{
