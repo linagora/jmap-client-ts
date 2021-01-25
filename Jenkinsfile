@@ -5,8 +5,11 @@ pipeline {
     stages {
         stage('Test') {
             steps {
-                sh 'node --version'
-                sh 'npm --version'
+                sh 'whoami ||true'
+                sh 'uname -a'
+                sh 'npm install'
+                sh 'npm run lint'
+                sh 'npm run test'
             }
         }
     }
