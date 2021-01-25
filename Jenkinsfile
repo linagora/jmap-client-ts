@@ -6,13 +6,13 @@ pipeline {
       agent {
         docker {
           image 'docker:19.03.12-dind'
-          args '-e DOCKER_HOST=tcp://docker:2375'
+          args '-e DOCKER_HOST=$DOCKER_HOST'
         }
       }
 
       steps {
         script {
-            docker.image('node:12.20.1-buster').inside {
+            docker.image('node:12.20.1-buster', '-e DOCKER_HOST=tcp://docker:2375').inside {
               sh 'npm install'
               sh 'npm run lint'
               sh 'npm run test'
