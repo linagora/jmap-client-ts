@@ -12,7 +12,7 @@ pipeline {
 
       steps {
         script {
-            docker.image('node:15.6.0-alpine3.10').withRun('-e DOCKER_HOST=tcp://docker:2375') {
+            docker.image('node:15.6.0-alpine3.10').withRun('-e DOCKER_HOST=tcp://docker:2375').inside {
               sh 'node -v'
               sh 'docker ps -a'
               //sh 'npm install'
