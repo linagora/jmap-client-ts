@@ -1,6 +1,4 @@
 pipeline {
-  agent none
-
   stages {
     stage('Install packages & lint & run tests') {
       agent {
