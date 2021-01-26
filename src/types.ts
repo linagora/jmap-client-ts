@@ -1,14 +1,9 @@
-export interface ITypeMap {
-  ['Mailbox/get']: IMailbox;
-  ['Email/query']: string[];
-  ['Email/get']: IEmailProperties;
-  ['Email/set']: null;
-}
+export type IMethodName = 'Mailbox/get' | 'Mailbox/set' | 'Email/get' | 'Email/query' | 'Email/set';
 
 /**
  * [ name, arguments, id ]
  */
-export type IMethodCall = [keyof ITypeMap, { [argumentName: string]: any }, string];
+export type IMethodCall = [IMethodName, { [argumentName: string]: any }, string];
 
 export interface IGetArguments<Properties> {
   accountId: string;
