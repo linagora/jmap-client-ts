@@ -15,11 +15,11 @@ export interface IGetArguments<Properties> {
   properties?: (keyof Properties)[];
 }
 
-export interface ISetArguments<CreatedObject> {
+export interface ISetArguments<Foo> {
   accountId: string;
-  ifInState?: string | null;
-  create?: { [temporaryId: string]: CreatedObject };
-  update?: { [id: string]: { [jsonPointer: string]: any } };
+  ifInState?: string;
+  create?: { [id: string]: Partial<Foo> };
+  update?: { [id: string]: Partial<Foo> & { [jsonPointer: string]: any } };
   destroy?: string[];
 }
 
@@ -188,6 +188,61 @@ export interface IMailboxGetResponse {
   state: string;
   list: IMailbox[];
   notFound: string[];
+}
+
+export interface IMailboxProperties {
+  [key: string]: any;
+}
+
+export interface IMailboxSetResponse {
+  accountId: string;
+  oldState?: string;
+  newState: string;
+  created?: IMailboxProperties;
+  updated?: Partial<IMailboxProperties>;
+  destroyed?: string[];
+  notCreated?: { [id: string]: ISetError };
+  notUpdated?: { [id: string]: ISetError };
+  notDestroyed?: { [id: string]: ISetError };
+}
+
+export type IErrorType =
+  | 'accountNotFound'
+  | 'accountNotSupportedByMethod'
+  | 'accountReadOnly'
+  | 'anchorNotFound'
+  | 'alreadyExists'
+  | 'cannotCalculateChanges'
+  | 'forbidden'
+  | 'fromAccountNotFound'
+  | 'fromAccountNotSupportedByMethod'
+  | 'invalidArguments'
+  | 'invalidPatch'
+  | 'invalidProperties'
+  | 'notFound'
+  | 'notJSON'
+  | 'notRequest'
+  | 'overQuota'
+  | 'rateLimit'
+  | 'requestTooLarge'
+  | 'invalidResultReference'
+  | 'serverFail'
+  | 'serverPartialFail'
+  | 'serverUnavailable'
+  | 'singleton'
+  | 'stateMismatch'
+  | 'tooLarge'
+  | 'tooManyChanges'
+  | 'unknownCapability'
+  | 'unknownMethod'
+  | 'unsupportedFilter'
+  | 'unsupportedSort'
+  | 'willDestroy';
+
+export interface ISetError {
+  type: IErrorType;
+  description?: string;
+  properties?: string[];
 }
 
 export interface IMaiboxEmailList {
