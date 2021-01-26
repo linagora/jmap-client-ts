@@ -2,6 +2,7 @@ export interface ITypeMap {
   ['Mailbox/get']: IMailbox;
   ['Email/query']: string[];
   ['Email/get']: IEmailProperties;
+  ['Email/set']: null;
 }
 
 /**

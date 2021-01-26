@@ -14,6 +14,7 @@ import {
   ISetArguments,
   IGetEmailArguments,
   IGetMailboxArguments,
+  ITypeMap,
 } from './types';
 
 export class Client {
@@ -83,20 +84,7 @@ export class Client {
   }
 
   public mailbox_get(args: IGetMailboxArguments): Promise<IMailboxGetResponse> {
-    const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
-    return this.httpRequest
-      .post<{
-        sessionState: string;
-        methodResponses: [['Mailbox/get', IMailboxGetResponse, string]];
-      }>(
-        apiUrl,
-        {
-          using: this.getCapabilities(),
-          methodCalls: [['Mailbox/get', this.replaceAccountId(args), '0']],
-        },
-        this.httpHeaders,
-      )
-      .then(response => response.methodResponses[0][1]);
+    return this.request<IMailboxGetResponse>('Mailbox/get', args);
   }
 
   public mailbox_set(args: ISetArguments<IMailboxProperties>): Promise<IMailboxSetResponse> {
@@ -117,52 +105,30 @@ export class Client {
   }
 
   public email_query(args: IQueryArguments<IEmailFilterCondition>): Promise<IEmailQueryResponse> {
-    const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
-    return this.httpRequest
-      .post<{
-        sessionState: string;
-        methodResponses: [['Email/query', IEmailQueryResponse, string]];
-      }>(
-        apiUrl,
-        {
-          using: this.getCapabilities(),
-          methodCalls: [['Email/query', this.replaceAccountId(args), '0']],
-        },
-        this.httpHeaders,
-      )
-      .then(response => response.methodResponses[0][1]);
+    return this.request<IEmailQueryResponse>('Email/query', args);
   }
 
   public email_get(args: IGetEmailArguments): Promise<IEmailGetResponse> {
-    const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
-    return this.httpRequest
-      .post<{
-        sessionState: string;
-        methodResponses: [['Email/get', IEmailGetResponse, string]];
-      }>(
-        apiUrl,
-        {
-          using: this.getCapabilities(),
-          methodCalls: [['Email/get', this.replaceAccountId(args), '0']],
-        },
-        this.httpHeaders,
-      )
-      .then(response => response.methodResponses[0][1]);
+    return this.request<IEmailGetResponse>('Email/get', args);
   }
 
   public email_set(
     args: ISetArguments<IEmailSetProperties>,
   ): Promise<IEmailSetResponse<IEmailProperties>> {
+    return this.request<IEmailSetResponse<IEmailProperties>>('Email/set', args);
+  }
+
+  private request<ResponseType>(methodName: keyof ITypeMap, args: any) {
     const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
     return this.httpRequest
       .post<{
         sessionState: string;
-        methodResponses: [['Email/set', IEmailSetResponse<IEmailProperties>, string]];
+        methodResponses: [[keyof ITypeMap, ResponseType, string]];
       }>(
         apiUrl,
         {
           using: this.getCapabilities(),
-          methodCalls: [['Email/set', this.replaceAccountId(args), '0']],
+          methodCalls: [[methodName, this.replaceAccountId(args), '0']],
         },
         this.httpHeaders,
       )
