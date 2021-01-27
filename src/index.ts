@@ -131,9 +131,7 @@ export class Client {
       .then(response => response.methodResponses[0][1]);
   }
 
-  public email_set(
-      args: ISetArguments<IEmailSetProperties>
-  ): Promise<IEmailSetResponse<IEmailProperties>> {
+  public email_set(args: ISetArguments<IEmailSetProperties>): Promise<IEmailSetResponse<IEmailProperties>> {
     const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
     return this.httpRequest
         .post<{
