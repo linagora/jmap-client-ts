@@ -1,53 +1,42 @@
-import { assert } from 'chai';
-import 'mocha';
 import { stripSubject } from './utils';
 
 describe('stripSubject', () => {
   const expected = 'Helloworld!';
 
   it('should return same string', () => {
-    assert.equal(stripSubject('Helloworld!'), expected);
+    expect(stripSubject('Helloworld!')).toEqual(expected);
   });
   it('should remove space', () => {
-    assert.equal(stripSubject('Hello world!'), expected);
+    expect(stripSubject('Hello world!')).toEqual(expected);
   });
   it('should remove multiple spaces', () => {
-    assert.equal(stripSubject('H e l l o    w o r l d!'), expected);
+    expect(stripSubject('H e l l o    w o r l d!')).toEqual(expected);
   });
   it('should remove text between square brackets and spaces', () => {
-    assert.equal(stripSubject('[PERSONAL] Hello world!'), expected);
+    expect(stripSubject('[PERSONAL] Hello world!')).toEqual(expected);
   });
   it('should remove text before colon and spaces', () => {
-    assert.equal(stripSubject('PERSONAL: Hello world!'), expected);
+    expect(stripSubject('PERSONAL: Hello world!')).toEqual(expected);
   });
   it('should remove text and square brackets between square brackets and spaces', () => {
-    assert.equal(stripSubject('[MORE [COMPLEX] ] Hello world!'), expected);
+    expect(stripSubject('[MORE [COMPLEX] ] Hello world!')).toEqual(expected);
   });
   it('should remove text and closing square bracket between square brackets and spaces', () => {
-    assert.equal(
-      stripSubject('[What about wrong brackets] ] Hello world!'),
-      expected
-    );
+    expect(stripSubject('[What about wrong brackets] ] Hello world!')).toEqual(expected);
   });
   it('should remove text and colon between square brackets and spaces', () => {
-    assert.equal(stripSubject('[ And : inside ] Hello world!'), expected);
+    expect(stripSubject('[ And : inside ] Hello world!')).toEqual(expected);
   });
   it('should remove text, colon and square brackets before semicolon', () => {
-    assert.equal(
-      stripSubject('[Inside : and ] outside : Hello world!'),
-      expected
-    );
+    expect(stripSubject('[Inside : and ] outside : Hello world!')).toEqual(expected);
   });
   it('should remove line break and spaces', () => {
-    assert.equal(stripSubject('  Hello\nworld!'), expected);
+    expect(stripSubject('  Hello\nworld!')).toEqual(expected);
   });
   it('should remove closing square bracket, colons, and text before colon and text between square brackets and spaces', () => {
-    assert.equal(
-      stripSubject(']:This:one:is:tricky: Hello [Invisible] world!'),
-      expected
-    );
+    expect(stripSubject(']:This:one:is:tricky: Hello [Invisible] world!')).toEqual(expected);
   });
   it('should remove colon and opening square bracket between square brackets and space', () => {
-    assert.equal(stripSubject('Hello[:[] world!'), expected);
+    expect(stripSubject('Hello[:[] world!')).toEqual(expected);
   });
 });

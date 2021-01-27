@@ -15,10 +15,7 @@ import {
 } from './types';
 
 export class Client {
-  private readonly DEFAULT_USING = [
-    'urn:ietf:params:jmap:core',
-    'urn:ietf:params:jmap:mail',
-  ];
+  private readonly DEFAULT_USING = ['urn:ietf:params:jmap:core', 'urn:ietf:params:jmap:mail'];
 
   private httpRequest: HttpRequest;
   private httpHeaders: { [headerName: string]: string };
@@ -53,11 +50,8 @@ export class Client {
   }
 
   public fetchSession(): Promise<void> {
-    const sessionPromise = this.httpRequest.get<ISession>(
-      this.sessionUrl,
-      this.httpHeaders
-    );
-    return sessionPromise.then((session) => {
+    const sessionPromise = this.httpRequest.get<ISession>(this.sessionUrl, this.httpHeaders);
+    return sessionPromise.then(session => {
       this.session = session;
       return;
     });
@@ -65,9 +59,7 @@ export class Client {
 
   public getSession(): ISession {
     if (!this.session) {
-      throw new Error(
-        'Undefined session, should call fetchSession and wait for its resolution'
-      );
+      throw new Error('Undefined session, should call fetchSession and wait for its resolution');
     }
     return this.session;
   }
@@ -88,9 +80,7 @@ export class Client {
     return accountIds[0];
   }
 
-  public mailbox_get(
-    args: IGetMailboxArguments
-  ): Promise<IMailboxGetResponse> {
+  public mailbox_get(args: IGetMailboxArguments): Promise<IMailboxGetResponse> {
     const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
     return this.httpRequest
       .post<{
@@ -102,14 +92,12 @@ export class Client {
           using: this.getCapabilities(),
           methodCalls: [['Mailbox/get', this.replaceAccountId(args), '0']],
         },
-        this.httpHeaders
+        this.httpHeaders,
       )
-      .then((response) => response.methodResponses[0][1]);
+      .then(response => response.methodResponses[0][1]);
   }
 
-  public email_query(
-    args: IQueryArguments<IEmailFilterCondition>
-  ): Promise<IEmailQueryResponse> {
+  public email_query(args: IQueryArguments<IEmailFilterCondition>): Promise<IEmailQueryResponse> {
     const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
     return this.httpRequest
       .post<{
@@ -121,14 +109,12 @@ export class Client {
           using: this.getCapabilities(),
           methodCalls: [['Email/query', this.replaceAccountId(args), '0']],
         },
-        this.httpHeaders
+        this.httpHeaders,
       )
-      .then((response) => response.methodResponses[0][1]);
+      .then(response => response.methodResponses[0][1]);
   }
 
-  public email_get(
-    args: IGetEmailArguments
-  ): Promise<IEmailGetResponse> {
+  public email_get(args: IGetEmailArguments): Promise<IEmailGetResponse> {
     const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
     return this.httpRequest
       .post<{
@@ -140,9 +126,9 @@ export class Client {
           using: this.getCapabilities(),
           methodCalls: [['Email/get', this.replaceAccountId(args), '0']],
         },
-        this.httpHeaders
+        this.httpHeaders,
       )
-      .then((response) => response.methodResponses[0][1]);
+      .then(response => response.methodResponses[0][1]);
   }
 
   public email_set(
@@ -167,14 +153,11 @@ export class Client {
   private replaceAccountId<U extends { accountId: string }>(input: U): U {
     return {
       ...input,
-      accountId:
-        input.accountId !== null ? input.accountId : this.getFirstAccountId(),
+      accountId: input.accountId !== null ? input.accountId : this.getFirstAccountId(),
     };
   }
 
   private getCapabilities() {
-    return this.session?.capabilities
-      ? Object.keys(this.session.capabilities)
-      : this.DEFAULT_USING;
+    return this.session?.capabilities ? Object.keys(this.session.capabilities) : this.DEFAULT_USING;
   }
 }

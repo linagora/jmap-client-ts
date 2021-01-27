@@ -7,11 +7,7 @@ export interface ITypeMap {
 /**
  * [ name, arguments, id ]
  */
-export type IMethodCall = [
-  keyof ITypeMap,
-  { [argumentName: string]: any },
-  string
-];
+export type IMethodCall = [keyof ITypeMap, { [argumentName: string]: any }, string];
 
 export interface IGetArguments<Properties> {
   accountId: string;
@@ -28,6 +24,8 @@ export interface ISetArguments<CreatedObject> {
 export interface IQueryArguments<FilterCondition> {
   accountId: string;
   filter?: FilterCondition;
+  position?: number;
+  limit?: number;
 }
 
 export interface IRequest {
