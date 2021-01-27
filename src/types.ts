@@ -13,10 +13,10 @@ export type IMethodCall = [
   string
 ];
 
-export interface IGetArguments {
+export interface IGetArguments<Properties> {
   accountId: string;
   ids: string[] | null;
-  properties?: string[];
+  properties?: (keyof Properties)[];
 }
 
 export interface ISetArguments<CreatedObject> {
@@ -69,12 +69,15 @@ export type EmailHeader = string;
 
 export type Attachment = File;
 
-export interface IGetEmailArguments extends IGetArguments {
+export interface IGetEmailArguments extends IGetArguments<IEmailProperties> {
   bodyProperties?: string[];
   fetchTextBodyValues?: boolean;
   fetchHTMLBodyValues?: boolean;
   fetchAllBodyValues?: boolean;
   maxBodyValueBytes?: number;
+}
+
+export interface IGetMailboxArguments extends IGetArguments<IMailboxProperties> {
 }
 
 export interface IEmailProperties {
