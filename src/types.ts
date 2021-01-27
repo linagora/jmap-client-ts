@@ -19,6 +19,8 @@ export interface ISetArguments<CreatedObject> {
   accountId: string;
   ifInState?: string | null;
   create?: { [temporaryId: string]: CreatedObject };
+  update?: { [id: string]: { [jsonPointer: string]: any } };
+  destroy?: string[];
 }
 
 export interface IQueryArguments<FilterCondition> {
@@ -106,10 +108,11 @@ export interface IEmailSetProperties {
   to: IEmailAddress[] | null;
   subject: string;
   attachments: Attachment[] | null;
-  textBody: IEmailSetBodyPart[];
+  textBody: IEmailSetBodyPart[] | null;
+  htmlBody: IEmailSetBodyPart[] | null;
   bodyValues: {
     [bodyPartId: string]: IEmailBodyValue;
-  };
+  } | null;
 }
 
 export type IUtcDate = string;

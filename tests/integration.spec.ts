@@ -83,6 +83,40 @@ describe('jmap-client-ts', () => {
     expect(emailGetResponse.accountId).toBeDefined();
   });
 
+  it('should have email set working', async () => {
+    const getMailboxesResponse = await client.mailbox_get({
+      accountId: client.getAccountIds()[0],
+      ids: null,
+    });
+
+    const draftMailbox = <string>(
+      getMailboxesResponse.list.find(mailbox => mailbox.name.toLowerCase() === 'drafts')?.id
+    );
+
+    const emailSetResponse = await client.email_set({
+      accountId: client.getAccountIds()[0],
+      create: {
+        emailCreated: {
+          mailboxIds: {
+            [draftMailbox]: true,
+          },
+          keywords: {
+            $draft: true,
+          },
+          from: [],
+          to: [],
+          subject: 'subject',
+          attachments: null,
+          textBody: null,
+          htmlBody: null,
+          bodyValues: null,
+        },
+      },
+    });
+
+    expect(emailSetResponse.created?.emailCreated).toBeDefined();
+  });
+
   function generateHeaders(username: string, password: string) {
     return {
       Authorization: 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64'),
