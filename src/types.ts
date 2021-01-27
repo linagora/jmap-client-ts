@@ -75,8 +75,7 @@ export interface IGetEmailArguments extends IGetArguments<IEmailProperties> {
   maxBodyValueBytes?: number;
 }
 
-export interface IGetMailboxArguments extends IGetArguments<IMailboxProperties> {
-}
+export type IGetMailboxArguments = IGetArguments<IMailboxProperties>;
 
 export interface IEmailProperties {
   id: string;
@@ -87,7 +86,7 @@ export interface IEmailProperties {
   from: IEmailAddress[] | null;
   to: IEmailAddress[] | null;
   bodyValues: {
-    [bodyPartId: string]: IEmailBodyValue
+    [bodyPartId: string]: IEmailBodyValue;
   };
   textBody: IEmailBodyPart[];
   htmlBody: IEmailBodyPart[];
@@ -109,7 +108,7 @@ export interface IEmailSetProperties {
   attachments: Attachment[] | null;
   textBody: IEmailSetBodyPart[];
   bodyValues: {
-    [bodyPartId: string]: IEmailBodyValue
+    [bodyPartId: string]: IEmailBodyValue;
   };
 }
 
