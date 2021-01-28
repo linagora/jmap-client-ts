@@ -1,4 +1,4 @@
-import { HttpRequest } from './http-request';
+import { Transport } from './utils/transport';
 import {
   IEmailFilterCondition,
   IEmailGetResponse,
@@ -20,7 +20,7 @@ import {
 export class Client {
   private readonly DEFAULT_USING = ['urn:ietf:params:jmap:core', 'urn:ietf:params:jmap:mail'];
 
-  private httpRequest: HttpRequest;
+  private transport: Transport;
   private httpHeaders: { [headerName: string]: string };
 
   private sessionUrl: string;
@@ -31,20 +31,20 @@ export class Client {
     sessionUrl,
     accessToken,
     overriddenApiUrl,
-    httpRequest,
+    transport,
     httpHeaders,
   }: {
     sessionUrl: string;
     accessToken: string;
     overriddenApiUrl?: string;
-    httpRequest?: HttpRequest;
+    transport: Transport;
     httpHeaders?: { [headerName: string]: string };
   }) {
     this.sessionUrl = sessionUrl;
     if (overriddenApiUrl) {
       this.overriddenApiUrl = overriddenApiUrl;
     }
-    this.httpRequest = httpRequest ? httpRequest : new HttpRequest();
+    this.transport = transport;
     this.httpHeaders = {
       Accept: 'application/json;jmapVersion=rfc-8621',
       Authorization: `Bearer ${accessToken}`,
@@ -53,7 +53,7 @@ export class Client {
   }
 
   public fetchSession(): Promise<void> {
-    const sessionPromise = this.httpRequest.get<ISession>(this.sessionUrl, this.httpHeaders);
+    const sessionPromise = this.transport.get<ISession>(this.sessionUrl, this.httpHeaders);
     return sessionPromise.then(session => {
       this.session = session;
       return;
@@ -107,7 +107,7 @@ export class Client {
 
   private request<ResponseType>(methodName: IMethodName, args: any) {
     const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
-    return this.httpRequest
+    return this.transport
       .post<{
         sessionState: string;
         methodResponses: [[IMethodName, ResponseType, string]];

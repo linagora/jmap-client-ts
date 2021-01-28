@@ -1,10 +1,17 @@
-import fetch, { Headers } from 'node-fetch';
-import { HttpRequest } from './http-request';
+import { Transport } from './transport';
 
-export class HttpRequestFetch extends HttpRequest {
-  // constructor() { }
+export class FetchTransport implements Transport {
+  private fetch: (...params: any[]) => Promise<Response>;
 
-  public post<ResponseType>(url: string, content: any, headers: { [headerName: string]: string }) {
+  constructor(fetch: any) {
+    this.fetch = fetch;
+  }
+
+  public post<ResponseType>(
+    url: string,
+    content: any,
+    headers: { [headerName: string]: string },
+  ): Promise<ResponseType> {
     return this.request<ResponseType>({
       url,
       method: 'POST',
@@ -13,11 +20,14 @@ export class HttpRequestFetch extends HttpRequest {
     });
   }
 
-  public get<ResponseType>(url: string, headers: { [headerName: string]: string }) {
+  public get<ResponseType>(
+    url: string,
+    headers: { [headerName: string]: string },
+  ): Promise<ResponseType> {
     return this.request<ResponseType>({ url, method: 'GET', headers });
   }
 
-  public request<ResponseType>({
+  private request<ResponseType>({
     url,
     method,
     body,
@@ -28,10 +38,10 @@ export class HttpRequestFetch extends HttpRequest {
     body?: any;
     headers: { [headerName: string]: string };
   }): Promise<ResponseType> {
-    return fetch(url, {
+    return this.fetch(url, {
       method,
       body: JSON.stringify(body),
-      headers: new Headers(headers),
+      headers: headers,
     }).then(response => {
       if (response.status !== 200) {
         throw new Error(`Request failed, got http status code ${response.status}`);

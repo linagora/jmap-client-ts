@@ -1,8 +1,8 @@
 import fetch from 'node-fetch';
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
-import { HttpRequestFetch } from '../src/http-request-fetch';
 import { Client } from '../src/index';
 import { IMailboxProperties } from '../src/types';
+import { FetchTransport } from '../src/utils/fetch-transport';
 
 describe('jmap-client-ts', () => {
   const DEFAULT_TIMEOUT = 60000;
@@ -44,7 +44,7 @@ describe('jmap-client-ts', () => {
       accessToken: '',
       httpHeaders: generateHeaders(currentUser, PASSWORD),
       overriddenApiUrl,
-      httpRequest: new HttpRequestFetch(),
+      transport: new FetchTransport(fetch),
     });
 
     await client.fetchSession();

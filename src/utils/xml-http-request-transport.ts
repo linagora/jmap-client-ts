@@ -1,7 +1,13 @@
-export class HttpRequest {
-  // constructor() { }
+import { Transport } from './transport';
 
-  public post<ResponseType>(
+export class XmlHttpRequestTransport implements Transport {
+  private xmlHttpRequestConstructor: () => XMLHttpRequest;
+
+  constructor(xmlHttpRequestConstructor: () => XMLHttpRequest) {
+    this.xmlHttpRequestConstructor = xmlHttpRequestConstructor;
+  }
+
+  post<ResponseType>(
     url: string,
     content: any,
     headers: { [headerName: string]: string },
@@ -14,14 +20,11 @@ export class HttpRequest {
     });
   }
 
-  public get<ResponseType>(
-    url: string,
-    headers: { [headerName: string]: string },
-  ): Promise<ResponseType> {
+  get<ResponseType>(url: string, headers: { [headerName: string]: string }): Promise<ResponseType> {
     return this.request<ResponseType>({ url, method: 'GET', headers });
   }
 
-  public request<ResponseType>({
+  private request<ResponseType>({
     url,
     method,
     body,
@@ -33,7 +36,7 @@ export class HttpRequest {
     headers: { [headerName: string]: string };
   }): Promise<ResponseType> {
     return new Promise((resolve, reject) => {
-      const request = new XMLHttpRequest();
+      const request = this.xmlHttpRequestConstructor();
 
       request.open(method, url);
 
@@ -43,10 +46,10 @@ export class HttpRequest {
 
       request.onload = () => {
         const status = request.status;
-        if (status === 0 || (status >= 200 && status < 300)) {
+        if (status === 200) {
           resolve(JSON.parse(request.responseText));
         } else {
-          reject(request.responseText);
+          reject(new Error(`Request failed, got http status code ${status}`));
         }
       };
 
