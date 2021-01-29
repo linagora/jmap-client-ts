@@ -103,14 +103,14 @@ export interface IEmailProperties {
 
 export interface IEmailSetProperties {
   mailboxIds: { [key: string]: boolean };
-  keywords: IEmailKeywords;
-  from: IEmailAddress[] | null;
-  to: IEmailAddress[] | null;
-  subject: string;
-  attachments: Attachment[] | null;
-  textBody: IEmailSetBodyPart[] | null;
-  htmlBody: IEmailSetBodyPart[] | null;
-  bodyValues: {
+  keywords?: IEmailKeywords;
+  from?: IEmailAddress[] | null;
+  to?: IEmailAddress[] | null;
+  subject?: string;
+  attachments?: Attachment[] | null;
+  textBody?: IEmailSetBodyPart[] | null;
+  htmlBody?: IEmailSetBodyPart[] | null;
+  bodyValues?: {
     [bodyPartId: string]: IEmailBodyValue;
   } | null;
 }
