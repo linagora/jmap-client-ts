@@ -83,7 +83,7 @@ describe('jmap-client-ts', () => {
     expect(emailGetResponse.accountId).toBeDefined();
   });
 
-  it('should have email set working', async () => {
+  it('should have email_set working', async () => {
     const getMailboxesResponse = await client.mailbox_get({
       accountId: client.getAccountIds()[0],
       ids: null,
