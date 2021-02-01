@@ -1,9 +1,12 @@
+import type fetch from 'node-fetch';
 import { Transport } from './transport';
 
-export class FetchTransport implements Transport {
-  private fetch: (...params: any[]) => Promise<Response>;
+type FetchType = typeof fetch;
 
-  constructor(fetch: any) {
+export class FetchTransport implements Transport {
+  private fetch: FetchType;
+
+  constructor(fetch: FetchType) {
     this.fetch = fetch;
   }
 

@@ -6,6 +6,7 @@ import {
   IEmailSetProperties,
   IEmailQueryResponse,
   IEmailSetResponse,
+  IArguments,
   IMailboxGetResponse,
   IMailboxSetResponse,
   IMailboxProperties,
@@ -105,7 +106,7 @@ export class Client {
     return this.request<IEmailSetResponse<IEmailProperties>>('Email/set', args);
   }
 
-  private request<ResponseType>(methodName: IMethodName, args: any) {
+  private request<ResponseType>(methodName: IMethodName, args: IArguments) {
     const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
     return this.transport
       .post<{

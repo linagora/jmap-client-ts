@@ -3,9 +3,15 @@ export type IMethodName = 'Mailbox/get' | 'Mailbox/set' | 'Email/get' | 'Email/q
 /**
  * [ name, arguments, id ]
  */
-export type IMethodCall = [IMethodName, { [argumentName: string]: any }, string];
+export type IMethodCall = [IMethodName, IArguments, string];
 
-export interface IGetArguments<Properties> {
+export type IEntityProperties = IEmailProperties | IMailboxProperties;
+
+export type IFilterCondition = IEmailFilterCondition;
+
+export type IArguments = IGetArguments<IEntityProperties> | IQueryArguments<IEmailFilterCondition>;
+
+export interface IGetArguments<Properties extends IEntityProperties> {
   accountId: string;
   ids: string[] | null;
   properties?: (keyof Properties)[];
@@ -19,7 +25,7 @@ export interface ISetArguments<Foo> {
   destroy?: string[];
 }
 
-export interface IQueryArguments<FilterCondition> {
+export interface IQueryArguments<FilterCondition extends IFilterCondition> {
   accountId: string;
   filter?: FilterCondition;
   position?: number;
