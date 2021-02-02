@@ -1,7 +1,6 @@
 import fetch from 'node-fetch';
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { Client } from '../src/index';
-import { IMailboxProperties } from '../src/types';
 import { FetchTransport } from '../src/utils/fetch-transport';
 
 describe('jmap-client-ts', () => {
@@ -135,7 +134,7 @@ describe('jmap-client-ts', () => {
       },
     };
 
-    expect(<IMailboxProperties>response.created).toBeDefined();
+    expect(response.created).toBeDefined();
     expect(response).toMatchObject(expect.objectContaining(expected));
   });
 

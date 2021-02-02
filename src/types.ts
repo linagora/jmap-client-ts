@@ -1,46 +1,145 @@
 export type IMethodName = 'Mailbox/get' | 'Mailbox/set' | 'Email/get' | 'Email/query' | 'Email/set';
 
 /**
+ * See https://jmap.io/spec-core.html#the-invocation-data-type
  * [ name, arguments, id ]
  */
 export type IMethodCall = [IMethodName, IArguments, string];
 
-export type IEntityProperties = IEmailProperties | IMailboxProperties;
+export type IEntityProperties = IMailboxProperties | IEmailProperties;
 
-export type IFilterCondition = IEmailFilterCondition;
+/**
+ * See https://jmap.io/spec-core.html#query
+ */
+export type IFilterCondition = IMailboxFilterCondition | IEmailFilterCondition;
 
-export type IArguments = IGetArguments<IEntityProperties> | IQueryArguments<IEmailFilterCondition>;
-
+export type IArguments =
+  | IGetArguments<IEntityProperties>
+  | ISetArguments<IEntityProperties>
+  | IQueryArguments<IEmailFilterCondition>;
 export interface IReplaceableAccountId {
   /**
    * If null, the library will replace its value by default account id.
    */
   accountId: string | null;
 }
+
+/**
+ * See https://jmap.io/spec-core.html#get
+ */
 export interface IGetArguments<Properties extends IEntityProperties> extends IReplaceableAccountId {
   ids: string[] | null;
   properties?: (keyof Properties)[];
 }
 
-export interface ISetArguments<Foo> extends IReplaceableAccountId {
+/**
+ * See https://jmap.io/spec-core.html#get
+ */
+export interface IGetResponse<Foo> {
+  accountId: string;
+  state: string;
+  list: Foo[];
+  notFound: string[];
+}
+
+/**
+ * See https://jmap.io/spec-core.html#changes
+ */
+export interface IChangesResponse {
+  accountId: string;
+  oldState: string;
+  newState: string;
+  hasMoreChanges: boolean;
+  created: string[];
+  updated: string[];
+  destroyed: string[];
+}
+
+/**
+ * See https://jmap.io/spec-core.html#set
+ */
+export interface ISetArguments<Properties extends IEntityProperties> extends IReplaceableAccountId {
   ifInState?: string;
-  create?: { [id: string]: Partial<Foo> };
-  update?: { [id: string]: Partial<Foo> & { [jsonPointer: string]: any } };
+  create?: { [id: string]: Partial<Properties> };
+  update?: { [id: string]: Partial<Properties> & { [jsonPointer: string]: any } };
   destroy?: string[];
 }
 
+/**
+ * See https://jmap.io/spec-core.html#set
+ */
+export interface ISetResponse<Foo> {
+  accountId: string;
+  oldState?: string;
+  newState: string;
+  created?: { [key: string]: Foo };
+  updated?: { [key: string]: Foo | null };
+  destroyed?: string[];
+  notCreated?: { [id: string]: ISetError };
+  notUpdated?: { [id: string]: ISetError };
+  notDestroyed?: { [id: string]: ISetError };
+}
+
+/**
+ * See https://jmap.io/spec-core.html#query
+ */
 export interface IQueryArguments<FilterCondition extends IFilterCondition>
   extends IReplaceableAccountId {
-  filter?: FilterCondition;
+  filter?: FilterCondition | IFilterOperator<FilterCondition>;
+  sort?: IComparator[];
   position?: number;
+  anchor?: string;
+  anchorOffset?: number;
+  limit?: number;
+  calculateTotal?: boolean;
+}
+
+/**
+ * See https://jmap.io/spec-core.html#query
+ */
+export interface IQueryResponse {
+  accountId: string;
+  queryState: string;
+  canCalculateChanges: boolean;
+  position: number;
+  ids: string[];
+  total?: number;
   limit?: number;
 }
 
+export type IEmailQueryArguments = IQueryArguments<IEmailFilterCondition>;
+
+export type IEmailQueryResponse = IQueryResponse;
+
+/**
+ * See https://jmap.io/spec-core.html#query
+ */
+export interface IFilterOperator<FilterCondition> {
+  operator: 'AND' | 'OR' | 'NOT';
+  conditions: (FilterCondition | IFilterOperator<FilterCondition>)[];
+}
+
+/**
+ * See https://jmap.io/spec-core.html#query
+ */
+export interface IComparator {
+  property: string;
+  isAscending?: boolean;
+  collation?: string;
+}
+
+/**
+ * See https://jmap.io/spec-core.html#the-request-object
+ */
 export interface IRequest {
   using: string[];
   methodCalls: IMethodCall[];
+  createdIds?: { [creationId: string]: string };
 }
 
+/**
+ * See https://jmap.io/spec-core.html#the-jmap-session-resource
+ */
 export interface ICapabilities {
   maxSizeUpload: number;
   maxConcurrentUpload: number;
@@ -52,13 +151,31 @@ export interface ICapabilities {
   collationAlgorithms: string[];
 }
 
+/**
+ * See https://jmap.io/spec-mail.html#additions-to-the-capabilities-object
+ */
+export interface IMailCapabilities {
+  maxMailboxesPerEmail?: number;
+  maxMailboxDepth?: number;
+  maxSizeMailboxName: number;
+  maxSizeAttachmentsPerEmail: number;
+  emailQuerySortOptions: string[];
+  mayCreateTopLevelMailbox: boolean;
+}
+
+/**
+ * See https://jmap.io/spec-core.html#the-jmap-session-resource
+ */
 export interface IAccount {
   name: string;
   isPersonal: boolean;
   isReadOnly: boolean;
-  accountCapabilities: { [key: string]: any };
+  accountCapabilities: { [key: string]: IMailCapabilities };
 }
 
+/**
+ * See https://jmap.io/spec-core.html#the-jmap-session-resource
+ */
 export interface ISession {
   capabilities: ICapabilities;
   accounts: { [accountId: string]: IAccount };
@@ -75,7 +192,10 @@ export type EmailHeader = string;
 
 export type Attachment = File;
 
-export interface IGetEmailArguments extends IGetArguments<IEmailProperties> {
+/**
+ * See https://jmap.io/spec-mail.html#emailget
+ */
+export interface IEmailGetArguments extends IGetArguments<IEmailProperties> {
   bodyProperties?: string[];
   fetchTextBodyValues?: boolean;
   fetchHTMLBodyValues?: boolean;
@@ -83,8 +203,9 @@ export interface IGetEmailArguments extends IGetArguments<IEmailProperties> {
   maxBodyValueBytes?: number;
 }
 
-export type IGetMailboxArguments = IGetArguments<IMailboxProperties>;
-
+/**
+ * See https://jmap.io/spec-mail.html#properties-of-the-email-object
+ */
 export interface IEmailProperties {
   id: string;
   blobId: string;
@@ -95,10 +216,11 @@ export interface IEmailProperties {
   to: IEmailAddress[] | null;
   bodyValues: {
     [bodyPartId: string]: IEmailBodyValue;
-  };
-  textBody: IEmailBodyPart[];
-  htmlBody: IEmailBodyPart[];
+  } | null;
+  textBody: IEmailBodyPart[] | null;
+  htmlBody: IEmailBodyPart[] | null;
   subject: string;
+  date: Date;
   size: number;
   preview: string;
   attachments: Attachment[] | null;
@@ -107,23 +229,12 @@ export interface IEmailProperties {
   receivedAt: IUtcDate;
 }
 
-export interface IEmailSetProperties {
-  mailboxIds: { [key: string]: boolean };
-  keywords?: IEmailKeywords;
-  from?: IEmailAddress[] | null;
-  to?: IEmailAddress[] | null;
-  subject?: string;
-  attachments?: Attachment[] | null;
-  textBody?: IEmailSetBodyPart[] | null;
-  htmlBody?: IEmailSetBodyPart[] | null;
-  bodyValues?: {
-    [bodyPartId: string]: IEmailBodyValue;
-  } | null;
-}
-
 export type IUtcDate = string;
 export type ITrue = true;
 
+/**
+ * See https://jmap.io/spec-mail.html#properties-of-the-email-object
+ */
 export interface IEmailKeywords {
   $draft?: ITrue;
   $seen?: ITrue;
@@ -135,37 +246,25 @@ export interface IEmailKeywords {
   $notjunk?: ITrue;
 }
 
+/**
+ * See https://jmap.io/spec-mail.html#properties-of-the-email-object
+ */
 export interface IEmailAddress {
   name: string;
   email: string;
 }
 
-export interface IThreadEmail {
+/**
+ * See https://jmap.io/spec-mail.html#threads
+ */
+export interface IThreadProperties {
   id: string;
-  mailboxIds: string[];
-  isUnread: boolean;
-  isFlagged: boolean;
+  emailsIds: string[];
 }
 
-export interface IThread {
-  id: string;
-  emails: IThreadEmail[];
-  createdModSeq: number;
-  updatedModSeq: number;
-  deleted: Date | null;
-}
-
-export interface IMailbox extends IMailboxProperties, IMailboxData {}
-
-export interface IMailboxData {
-  createdModSeq: number;
-  updatedModSeq: number;
-  updatedNotCounrsModSeq: number;
-  highestUID: number;
-  emailHighestModSeq: number;
-  emailListLowModSeq: number;
-}
-
+/**
+ * See https://jmap.io/spec-mail.html#mailboxes
+ */
 export interface IMailboxRights {
   mayReadItems: boolean;
   mayAddItems: boolean;
@@ -175,43 +274,34 @@ export interface IMailboxRights {
   mayDelete: boolean;
 }
 
+/**
+ * See https://jmap.io/spec-mail.html#mailboxes
+ */
 export interface IMailboxProperties {
   id: string;
   name: string;
   parentId?: string;
-  role: string;
+  role?: string;
   sortOrder: number;
-  myRights: IMailboxRights;
   totalEmails: number;
   unreadEmails: number;
   totalThreads: number;
   unreadThreads: number;
-  deleted?: Date;
+  myRights: IMailboxRights;
+  isSubscribed: false;
 }
 
-export interface IMailboxGetResponse {
-  accountId: string | null;
-  state: string;
-  list: IMailbox[];
-  notFound: string[];
-}
+export type IMailboxGetArguments = IGetArguments<IMailboxProperties>;
 
-export interface IMailboxProperties {
-  [key: string]: any;
-}
+export type IMailboxGetResponse = IGetResponse<IMailboxProperties>;
 
-export interface IMailboxSetResponse {
-  accountId: string;
-  oldState?: string;
-  newState: string;
-  created?: IMailboxProperties;
-  updated?: Partial<IMailboxProperties>;
-  destroyed?: string[];
-  notCreated?: { [id: string]: ISetError };
-  notUpdated?: { [id: string]: ISetError };
-  notDestroyed?: { [id: string]: ISetError };
-}
+export type IMailboxSetArguments = ISetArguments<IMailboxProperties>;
 
+export type IMailboxSetResponse = ISetResponse<IMailboxProperties>;
+
+/**
+ * See https://jmap.io/spec-core.html#creation-of-jmap-error-codes-registry
+ */
 export type IErrorType =
   | 'accountNotFound'
   | 'accountNotSupportedByMethod'
@@ -245,60 +335,40 @@ export type IErrorType =
   | 'unsupportedSort'
   | 'willDestroy';
 
+/**
+ * See https://jmap.io/spec-core.html#set
+ */
 export interface ISetError {
   type: IErrorType;
   description?: string;
   properties?: string[];
 }
 
-export interface IMaiboxEmailList {
+export interface IMailboxEmailList {
   id: string; // mailboxId . (Max_Int64 - EmailDate) . uid
+  threadId: string;
   messageId: string;
   updatedModSeq: number; // Documentation says it is string, must be an error
   created: Date;
   deleted: Date | null;
 }
 
-export interface IEmailChangeLog {
-  id: string;
-  created: string[];
-  updated: string[];
-  destroyed: string[];
-}
+export type IEmailChangesResponse = IChangesResponse;
 
-export interface IThreadChangeLog {
-  id: string;
-  created: string[];
-  updated: string[];
-  destroyed: string[];
-}
+export type IThreadChangesResponse = IChangesResponse;
 
-export interface IThreadRef {
-  id: string; // hash(rfc822id) . hash(subject)
-  threadId: string;
-  lastSeen: Date;
-}
-
-export interface IHighLowModSeqCache {
-  highModSeq: number;
-  highModSeqEmail: number;
-  highModSeqThread: number;
-  highModSeqMailbox: number;
-  lowModSeqEmail: number;
-  lowModSeqThread: number;
-  lowModSeqMailbox: number;
-}
-
-export interface IMessage {
-  htmlBody: string;
-}
-
+/**
+ * See https://jmap.io/spec-mail.html#properties-of-the-email-object
+ */
 export interface IEmailBodyValue {
   value: string;
   isEncodingProblem: boolean;
   isTruncated: boolean;
 }
 
+/**
+ * See https://jmap.io/spec-mail.html#properties-of-the-email-object
+ */
 export interface IEmailBodyPart {
   partId: string;
   blobId: string;
@@ -321,37 +391,53 @@ export interface IEmailBodyPart {
   preview: string;
 }
 
+/**
+ * See https://jmap.io/spec-mail.html#emailset
+ */
 export interface IEmailSetBodyPart {
   partId: string;
   type: string;
 }
 
+/**
+ * See https://jmap.io/spec-mail.html#mailboxquery
+ */
+export interface IMailboxFilterCondition {
+  parentId?: string | null;
+  name?: string;
+  role?: string | null;
+  hasAnyRole?: boolean;
+  isSubscribed?: boolean;
+}
+
+/**
+ * See https://jmap.io/spec-mail.html#emailquery
+ */
 export interface IEmailFilterCondition {
-  inMailbox: string;
+  inMailbox?: string;
+  inMailboxOtherThan?: string[];
+  before?: IUtcDate;
+  after?: IUtcDate;
+  minSize?: number;
+  maxSize?: number;
+  allInThreadHaveKeyword?: string;
+  someInThreadHaveKeyword?: string;
+  noneInThreadHaveKeyword?: string;
+  hasKeyword?: string;
+  notKeyword?: string;
+  hasAttachment?: boolean;
+  text?: string;
+  from?: string;
+  to?: string;
+  cc?: string;
+  bcc?: string;
+  subject?: string;
+  body?: string;
+  header?: string[];
 }
 
-export interface IEmailQueryResponse {
-  accountId: string;
-  queryState: string;
-  canCalculateChanges: boolean;
-  position: number;
-  ids: string[];
-  total?: number;
-  limit?: number;
-}
+export type IEmailGetResponse = IGetResponse<IEmailProperties>;
 
-export interface IEmailGetResponse {
-  accountId: string | null;
-  state: string;
-  list: IEmailProperties[];
-  notFound: string[];
-}
+export type IEmailSetArguments = ISetArguments<IEmailProperties>;
 
-export interface IEmailSetResponse<SetObject> {
-  accountId: string | null;
-  oldState?: string | null;
-  newState: string;
-  created?: { [key: string]: SetObject } | null;
-  updated?: { [key: string]: SetObject | null } | null;
-  destroyed?: string[] | null;
-}
+export type IEmailSetResponse = ISetResponse<IEmailProperties>;
