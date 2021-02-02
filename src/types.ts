@@ -12,7 +12,15 @@ export type IMethodCall = [keyof ITypeMap, { [argumentName: string]: any }, stri
 export interface IGetArguments<Properties> {
   accountId: string;
   ids: string[] | null;
-  properties?: Properties[];
+  properties?: (keyof Properties)[];
+}
+
+export interface ISetArguments<CreatedObject> {
+  accountId: string;
+  ifInState?: string | null;
+  create?: { [temporaryId: string]: CreatedObject };
+  update?: { [id: string]: { [jsonPointer: string]: any } };
+  destroy?: string[];
 }
 
 export interface IQueryArguments<FilterCondition> {
@@ -61,6 +69,16 @@ export type EmailHeader = string;
 
 export type Attachment = File;
 
+export interface IGetEmailArguments extends IGetArguments<IEmailProperties> {
+  bodyProperties?: string[];
+  fetchTextBodyValues?: boolean;
+  fetchHTMLBodyValues?: boolean;
+  fetchAllBodyValues?: boolean;
+  maxBodyValueBytes?: number;
+}
+
+export type IGetMailboxArguments = IGetArguments<IMailboxProperties>;
+
 export interface IEmailProperties {
   id: string;
   blobId: string;
@@ -69,6 +87,11 @@ export interface IEmailProperties {
   keywords: IEmailKeywords;
   from: IEmailAddress[] | null;
   to: IEmailAddress[] | null;
+  bodyValues: {
+    [bodyPartId: string]: IEmailBodyValue;
+  };
+  textBody: IEmailBodyPart[];
+  htmlBody: IEmailBodyPart[];
   subject: string;
   size: number;
   preview: string;
@@ -76,6 +99,20 @@ export interface IEmailProperties {
   createdModSeq: number;
   updatedModSeq: number;
   receivedAt: IUtcDate;
+}
+
+export interface IEmailSetProperties {
+  mailboxIds: { [key: string]: boolean };
+  keywords?: IEmailKeywords;
+  from?: IEmailAddress[] | null;
+  to?: IEmailAddress[] | null;
+  subject?: string;
+  attachments?: Attachment[] | null;
+  textBody?: IEmailSetBodyPart[] | null;
+  htmlBody?: IEmailSetBodyPart[] | null;
+  bodyValues?: {
+    [bodyPartId: string]: IEmailBodyValue;
+  } | null;
 }
 
 export type IUtcDate = string;
@@ -223,6 +260,11 @@ export interface IEmailBodyPart {
   preview: string;
 }
 
+export interface IEmailSetBodyPart {
+  partId: string;
+  type: string;
+}
+
 export interface IEmailFilterCondition {
   inMailbox: string;
 }
@@ -242,4 +284,13 @@ export interface IEmailGetResponse {
   state: string;
   list: IEmailProperties[];
   notFound: string[];
+}
+
+export interface IEmailSetResponse<SetObject> {
+  accountId: string | null;
+  oldState?: string | null;
+  newState: string;
+  created?: { [key: string]: SetObject } | null;
+  updated?: { [key: string]: SetObject | null } | null;
+  destroyed?: string[] | null;
 }

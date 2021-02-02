@@ -3,12 +3,15 @@ import {
   IEmailFilterCondition,
   IEmailGetResponse,
   IEmailProperties,
+  IEmailSetProperties,
   IEmailQueryResponse,
-  IGetArguments,
+  IEmailSetResponse,
   IMailboxGetResponse,
-  IMailboxProperties,
   IQueryArguments,
   ISession,
+  ISetArguments,
+  IGetEmailArguments,
+  IGetMailboxArguments,
 } from './types';
 
 export class Client {
@@ -77,7 +80,7 @@ export class Client {
     return accountIds[0];
   }
 
-  public mailbox_get(args: IGetArguments<IMailboxProperties>): Promise<IMailboxGetResponse> {
+  public mailbox_get(args: IGetMailboxArguments): Promise<IMailboxGetResponse> {
     const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
     return this.httpRequest
       .post<{
@@ -111,7 +114,7 @@ export class Client {
       .then(response => response.methodResponses[0][1]);
   }
 
-  public email_get(args: IGetArguments<IEmailProperties>): Promise<IEmailGetResponse> {
+  public email_get(args: IGetEmailArguments): Promise<IEmailGetResponse> {
     const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
     return this.httpRequest
       .post<{
@@ -122,6 +125,25 @@ export class Client {
         {
           using: this.getCapabilities(),
           methodCalls: [['Email/get', this.replaceAccountId(args), '0']],
+        },
+        this.httpHeaders,
+      )
+      .then(response => response.methodResponses[0][1]);
+  }
+
+  public email_set(
+    args: ISetArguments<IEmailSetProperties>,
+  ): Promise<IEmailSetResponse<IEmailProperties>> {
+    const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
+    return this.httpRequest
+      .post<{
+        sessionState: string;
+        methodResponses: [['Email/set', IEmailSetResponse<IEmailProperties>, string]];
+      }>(
+        apiUrl,
+        {
+          using: this.getCapabilities(),
+          methodCalls: [['Email/set', this.replaceAccountId(args), '0']],
         },
         this.httpHeaders,
       )
