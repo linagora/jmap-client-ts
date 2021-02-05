@@ -2,6 +2,7 @@ import fetch from 'node-fetch';
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { HttpRequestFetch } from '../src/http-request-fetch';
 import { Client } from '../src/index';
+import { IMailboxProperties } from '../src/types';
 
 describe('jmap-client-ts', () => {
   const DEFAULT_TIMEOUT = 60000;
@@ -115,6 +116,27 @@ describe('jmap-client-ts', () => {
     });
 
     expect(emailSetResponse.created?.emailCreated).toBeDefined();
+  });
+
+  it('should create mailbox', async () => {
+    const id = '674cc24095db49ce';
+    const response = await client.mailbox_set({
+      accountId: client.getAccountIds()[0],
+      create: {
+        [id]: {
+          name: 'mailbox1',
+        },
+      },
+    });
+
+    const expected = {
+      created: {
+        [id]: expect.any(Object),
+      },
+    };
+
+    expect(<IMailboxProperties>response.created).toBeDefined();
+    expect(response).toMatchObject(expect.objectContaining(expected));
   });
 
   function generateHeaders(username: string, password: string) {

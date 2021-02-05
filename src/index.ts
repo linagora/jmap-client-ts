@@ -7,6 +7,8 @@ import {
   IEmailQueryResponse,
   IEmailSetResponse,
   IMailboxGetResponse,
+  IMailboxSetResponse,
+  IMailboxProperties,
   IQueryArguments,
   ISession,
   ISetArguments,
@@ -91,6 +93,23 @@ export class Client {
         {
           using: this.getCapabilities(),
           methodCalls: [['Mailbox/get', this.replaceAccountId(args), '0']],
+        },
+        this.httpHeaders,
+      )
+      .then(response => response.methodResponses[0][1]);
+  }
+
+  public mailbox_set(args: ISetArguments<IMailboxProperties>): Promise<IMailboxSetResponse> {
+    const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
+    return this.httpRequest
+      .post<{
+        sessionState: string;
+        methodResponses: [['Mailbox/set', IMailboxSetResponse, string]];
+      }>(
+        apiUrl,
+        {
+          using: this.getCapabilities(),
+          methodCalls: [['Mailbox/set', this.replaceAccountId(args), '0']],
         },
         this.httpHeaders,
       )
