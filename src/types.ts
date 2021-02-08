@@ -11,22 +11,26 @@ export type IFilterCondition = IEmailFilterCondition;
 
 export type IArguments = IGetArguments<IEntityProperties> | IQueryArguments<IEmailFilterCondition>;
 
-export interface IGetArguments<Properties extends IEntityProperties> {
-  accountId: string;
+export interface IReplaceableAccountId {
+  /**
+   * If null, the library will replace its value by default account id.
+   */
+  accountId: string | null;
+}
+export interface IGetArguments<Properties extends IEntityProperties> extends IReplaceableAccountId {
   ids: string[] | null;
   properties?: (keyof Properties)[];
 }
 
-export interface ISetArguments<Foo> {
-  accountId: string;
+export interface ISetArguments<Foo> extends IReplaceableAccountId {
   ifInState?: string;
   create?: { [id: string]: Partial<Foo> };
   update?: { [id: string]: Partial<Foo> & { [jsonPointer: string]: any } };
   destroy?: string[];
 }
 
-export interface IQueryArguments<FilterCondition extends IFilterCondition> {
-  accountId: string;
+export interface IQueryArguments<FilterCondition extends IFilterCondition>
+  extends IReplaceableAccountId {
   filter?: FilterCondition;
   position?: number;
   limit?: number;

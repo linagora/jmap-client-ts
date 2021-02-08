@@ -16,6 +16,7 @@ import {
   IGetEmailArguments,
   IGetMailboxArguments,
   IMethodName,
+  IReplaceableAccountId,
 } from './types';
 
 export class Client {
@@ -123,11 +124,13 @@ export class Client {
       .then(response => response.methodResponses[0][1]);
   }
 
-  private replaceAccountId<U extends { accountId: string }>(input: U): U {
-    return {
-      ...input,
-      accountId: input.accountId !== null ? input.accountId : this.getFirstAccountId(),
-    };
+  private replaceAccountId<U extends IReplaceableAccountId>(input: U): U {
+    return input.accountId !== null
+      ? input
+      : {
+          ...input,
+          accountId: this.getFirstAccountId(),
+        };
   }
 
   private getCapabilities() {
