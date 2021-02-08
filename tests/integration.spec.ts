@@ -2,7 +2,8 @@ import fetch from 'node-fetch';
 import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { Client } from '../src/index';
 import { IMailboxProperties } from '../src/types';
-import { FetchTransport } from '../src/utils/fetch-transport';
+import { AxiosTransport } from '../src/utils/axios-transport';
+import axios from 'axios';
 
 describe('jmap-client-ts', () => {
   const DEFAULT_TIMEOUT = 60000;
@@ -44,7 +45,7 @@ describe('jmap-client-ts', () => {
       accessToken: '',
       httpHeaders: generateHeaders(currentUser, PASSWORD),
       overriddenApiUrl,
-      transport: new FetchTransport(fetch),
+      transport: new AxiosTransport(axios),
     });
 
     await client.fetchSession();
