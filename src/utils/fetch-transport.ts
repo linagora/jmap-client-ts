@@ -1,12 +1,21 @@
-import type fetch from 'node-fetch';
 import { Transport } from './transport';
 
-type FetchType = typeof fetch;
-
+type Fetch = (
+  url: string,
+  params: {
+    method: 'POST' | 'GET';
+    body: any;
+    headers: { [header: string]: string };
+  },
+) => Promise<Response>;
+type Response = {
+  status: number;
+  json: () => any;
+};
 export class FetchTransport implements Transport {
-  private fetch: FetchType;
+  private fetch: Fetch;
 
-  constructor(fetch: FetchType) {
+  constructor(fetch: Fetch) {
     this.fetch = fetch;
   }
 
