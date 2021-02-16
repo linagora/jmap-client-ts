@@ -1,22 +1,19 @@
 import { Transport } from './utils/transport';
 import {
-  IEmailFilterCondition,
   IEmailGetResponse,
-  IEmailProperties,
-  IEmailSetProperties,
   IEmailQueryResponse,
   IEmailSetResponse,
   IArguments,
   IMailboxGetResponse,
   IMailboxSetResponse,
-  IMailboxProperties,
-  IQueryArguments,
   ISession,
-  ISetArguments,
-  IGetEmailArguments,
-  IGetMailboxArguments,
+  IEmailGetArguments,
+  IMailboxGetArguments,
+  IMailboxSetArguments,
   IMethodName,
   IReplaceableAccountId,
+  IEmailQueryArguments,
+  IEmailSetArguments,
 } from './types';
 
 export class Client {
@@ -85,26 +82,24 @@ export class Client {
     return accountIds[0];
   }
 
-  public mailbox_get(args: IGetMailboxArguments): Promise<IMailboxGetResponse> {
+  public mailbox_get(args: IMailboxGetArguments): Promise<IMailboxGetResponse> {
     return this.request<IMailboxGetResponse>('Mailbox/get', args);
   }
 
-  public mailbox_set(args: ISetArguments<IMailboxProperties>): Promise<IMailboxSetResponse> {
+  public mailbox_set(args: IMailboxSetArguments): Promise<IMailboxSetResponse> {
     return this.request<IMailboxSetResponse>('Mailbox/set', args);
   }
 
-  public email_get(args: IGetEmailArguments): Promise<IEmailGetResponse> {
+  public email_get(args: IEmailGetArguments): Promise<IEmailGetResponse> {
     return this.request<IEmailGetResponse>('Email/get', args);
   }
 
-  public email_query(args: IQueryArguments<IEmailFilterCondition>): Promise<IEmailQueryResponse> {
+  public email_query(args: IEmailQueryArguments): Promise<IEmailQueryResponse> {
     return this.request<IEmailQueryResponse>('Email/query', args);
   }
 
-  public email_set(
-    args: ISetArguments<IEmailSetProperties>,
-  ): Promise<IEmailSetResponse<IEmailProperties>> {
-    return this.request<IEmailSetResponse<IEmailProperties>>('Email/set', args);
+  public email_set(args: IEmailSetArguments): Promise<IEmailSetResponse> {
+    return this.request<IEmailSetResponse>('Email/set', args);
   }
 
   private request<ResponseType>(methodName: IMethodName, args: IArguments) {
