@@ -3,7 +3,7 @@ import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { Client } from '../src/index';
 import { IMailboxProperties } from '../src/types';
 import { AxiosTransport } from '../src/utils/axios-transport';
-import axios from 'axios';
+import axios from '';
 
 describe('jmap-client-ts', () => {
   const DEFAULT_TIMEOUT = 60000;
@@ -136,7 +136,7 @@ describe('jmap-client-ts', () => {
       },
     };
 
-    expect(<IMailboxProperties>response.created).toBeDefined();
+    expect(response.created).toBeDefined();
     expect(response).toMatchObject(expect.objectContaining(expected));
   });
 
