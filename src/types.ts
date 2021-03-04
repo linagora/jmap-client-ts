@@ -1,4 +1,10 @@
-export type IMethodName = 'Mailbox/get' | 'Mailbox/set' | 'Email/get' | 'Email/query' | 'Email/set';
+export type IMethodName =
+  | 'Mailbox/get'
+  | 'Mailbox/changes'
+  | 'Mailbox/set'
+  | 'Email/get'
+  | 'Email/query'
+  | 'Email/set';
 
 /**
  * See https://jmap.io/spec-core.html#the-invocation-data-type
@@ -40,6 +46,14 @@ export interface IGetResponse<Foo> {
   state: string;
   list: Foo[];
   notFound: string[];
+}
+
+/**
+ * See https://jmap.io/spec-core.html#changes
+ */
+export interface IChangesArguments extends IReplaceableAccountId {
+  sinceState: string;
+  maxChanges?: number | null;
 }
 
 /**
@@ -294,6 +308,15 @@ export interface IMailboxProperties {
 export type IMailboxGetArguments = IGetArguments<IMailboxProperties>;
 
 export type IMailboxGetResponse = IGetResponse<IMailboxProperties>;
+
+export type IMailboxChangesArguments = IChangesArguments;
+
+/**
+ * See https://jmap.io/spec-mail.html#mailboxchanges
+ */
+export interface IMailboxChangesResponse extends IChangesResponse {
+  updatedProperties: string[] | null;
+}
 
 export type IMailboxSetArguments = ISetArguments<IMailboxProperties>;
 
