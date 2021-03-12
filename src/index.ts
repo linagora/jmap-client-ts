@@ -14,6 +14,8 @@ import {
   IReplaceableAccountId,
   IEmailQueryArguments,
   IEmailSetArguments,
+  IMailboxChangesArguments,
+  IMailboxChangesResponse,
 } from './types';
 
 export class Client {
@@ -84,6 +86,10 @@ export class Client {
 
   public mailbox_get(args: IMailboxGetArguments): Promise<IMailboxGetResponse> {
     return this.request<IMailboxGetResponse>('Mailbox/get', args);
+  }
+
+  public mailbox_changes(args: IMailboxChangesArguments): Promise<IMailboxChangesResponse> {
+    return this.request<IMailboxChangesResponse>('Mailbox/changes', args);
   }
 
   public mailbox_set(args: IMailboxSetArguments): Promise<IMailboxSetResponse> {
