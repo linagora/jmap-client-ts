@@ -500,7 +500,7 @@ export interface IEmailSubmissionProperties {
   emailId: string;
   threadId: string;
   envelope: Envelope | null;
-  sendAt: Date;
+  sendAt: IUtcDate;
   undoStatus: 'pending' | 'final' | 'canceled';
   deliveryStatus: { [id: string]: DeliveryStatus } | null;
   dsnBlobIds: string[];
@@ -508,17 +508,34 @@ export interface IEmailSubmissionProperties {
 }
 
 /**
- * See https://jmap.io/spec-mail.html#emailget
+ * See https://jmap.io/spec-mail.html#emailsubmissionget
  */
 export type IEmailSubmissionGetArguments = IGetArguments<IEmailSubmissionProperties>;
 
+/**
+ * See https://jmap.io/spec-mail.html#emailsubmissionchanges
+ */
 export type IEmailSubmissionChangesArguments = IChangesArguments;
 
+/**
+ * See https://jmap.io/spec-mail.html#emailsubmissionchanges
+ */
+export type IEmailSubmissionChangesResponse = IChangesResponse;
+
+/**
+ * See https://jmap.io/spec-mail.html#emailsubmissionget
+ */
 export type IEmailSubmissionResponse = IGetResponse<IEmailSubmissionProperties>;
 
+/**
+ * See https://jmap.io/spec-mail.html#emailsubmissionset
+ */
 export type IEmailSubmissionSetArguments = ISetArguments<IEmailSubmissionProperties> & {
   onSuccessUpdateEmail?: { [jsonpointer: string]: any } | null;
   onSuccessDestroyEmail?: string[] | null;
 };
 
+/**
+ * See https://jmap.io/spec-mail.html#emailsubmissionset
+ */
 export type IEmailSubmissionSetResponse = ISetResponse<IEmailSubmissionProperties>;

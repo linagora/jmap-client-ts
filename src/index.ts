@@ -21,6 +21,7 @@ import {
   IEmailSubmissionGetArguments,
   IEmailSubmissionChangesArguments,
   IEmailSubmissionSetResponse,
+  IEmailSubmissionChangesResponse,
 } from './types';
 
 export class Client {
@@ -121,8 +122,8 @@ export class Client {
 
   public emailSubmission_changes(
     args: IEmailSubmissionChangesArguments,
-  ): Promise<IEmailSubmissionResponse> {
-    return this.request<IEmailSubmissionResponse>('EmailSubmission/changes', args);
+  ): Promise<IEmailSubmissionChangesResponse> {
+    return this.request<IEmailSubmissionChangesResponse>('EmailSubmission/changes', args);
   }
 
   public emailSubmission_set(
