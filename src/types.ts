@@ -517,7 +517,11 @@ export type IEmailSubmissionChangesArguments = IChangesArguments;
 export type IEmailSubmissionResponse = IGetResponse<IEmailSubmissionProperties>;
 
 export type IEmailSubmissionSetArguments = ISetArguments<IEmailSubmissionProperties> & {
-  onSuccessUpdateEmail?: { [jsonpointer: string]: any } | null;
+  onSuccessUpdateEmail?: {
+    [emailSubmissionId: string]: {
+      [id: string]: Partial<IEmailProperties> & { [jsonPointer: string]: any };
+    };
+  } | null;
   onSuccessDestroyEmail?: string[] | null;
 };
 
