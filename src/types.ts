@@ -502,7 +502,7 @@ export interface IEmailSubmissionProperties {
   envelope?: Envelope | null;
   sendAt: Date;
   undoStatus: 'pending' | 'final' | 'canceled';
-  deliveryStatus: { [id: string]: DeliveryStatus } | null;
+  deliveryStatus: { [recipientEmailAddress: string]: DeliveryStatus } | null;
   dsnBlobIds: string[];
   mdnBlobIds: string[];
 }
