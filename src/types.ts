@@ -499,7 +499,7 @@ export interface IEmailSubmissionProperties {
   identityId: string;
   emailId: string;
   threadId: string;
-  envelope: Envelope | null;
+  envelope?: Envelope | null;
   sendAt: Date;
   undoStatus: 'pending' | 'final' | 'canceled';
   deliveryStatus: { [id: string]: DeliveryStatus } | null;
