@@ -482,7 +482,7 @@ export interface DeliveryStatus {
  */
 export interface Address {
   email: string;
-  parameters: any | null;
+  parameters?: { [parameterName: string]: string | null } | null;
 }
 /**
  * See https://jmap.io/spec-mail.html#email-submission
