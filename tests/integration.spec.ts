@@ -163,6 +163,67 @@ describe('jmap-client-ts', () => {
     expect(response).toMatchObject(expect.objectContaining(expected));
   });
 
+  it('should submit email', async () => {
+    const getMailboxesResponse = await client.mailbox_get({
+      accountId: client.getAccountIds()[0],
+      ids: null,
+    });
+
+    const draftMailbox = <string>(
+      getMailboxesResponse.list.find(mailbox => mailbox.name.toLowerCase() === 'drafts')?.id
+    );
+
+    const emailSetResponse = await client.email_set({
+      accountId: client.getAccountIds()[0],
+      create: {
+        emailCreated: {
+          mailboxIds: {
+            [draftMailbox]: true,
+          },
+          keywords: {
+            $draft: true,
+          },
+          from: [
+            {
+              name: currentUser,
+              email: currentUser,
+            },
+          ],
+          to: [
+            {
+              name: 'random@localhost',
+              email: 'random@localhost',
+            },
+          ],
+          subject: 'subject',
+          attachments: null,
+          textBody: null,
+          htmlBody: null,
+          bodyValues: null,
+        },
+      },
+    });
+
+    const id = '674cc24095db49ce';
+    const response = await client.emailSubmission_set({
+      accountId: client.getAccountIds()[0],
+      create: {
+        [id]: {
+          emailId: emailSetResponse.created!.emailCreated.id,
+        },
+      },
+    });
+
+    const expected = {
+      created: {
+        [id]: expect.any(String),
+      },
+    };
+
+    expect(response.created).toBeDefined();
+    expect(response).toMatchObject(expect.objectContaining(expected));
+  });
+
   function generateHeaders(username: string, password: string) {
     return {
       Authorization: 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64'),

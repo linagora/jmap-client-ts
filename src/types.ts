@@ -4,7 +4,10 @@ export type IMethodName =
   | 'Mailbox/set'
   | 'Email/get'
   | 'Email/query'
-  | 'Email/set';
+  | 'Email/set'
+  | 'EmailSubmission/get'
+  | 'EmailSubmission/changes'
+  | 'EmailSubmission/set';
 
 /**
  * See https://jmap.io/spec-core.html#the-invocation-data-type
@@ -12,7 +15,7 @@ export type IMethodName =
  */
 export type IMethodCall = [IMethodName, IArguments, string];
 
-export type IEntityProperties = IMailboxProperties | IEmailProperties;
+export type IEntityProperties = IMailboxProperties | IEmailProperties | IEmailSubmissionProperties;
 
 /**
  * See https://jmap.io/spec-core.html#query
@@ -231,8 +234,8 @@ export interface IEmailProperties {
   bodyValues: {
     [bodyPartId: string]: IEmailBodyValue;
   } | null;
-  textBody: IEmailBodyPart[] | null;
-  htmlBody: IEmailBodyPart[] | null;
+  textBody: Partial<IEmailBodyPart>[] | null;
+  htmlBody: Partial<IEmailBodyPart>[] | null;
   subject: string;
   date: Date;
   size: number;
@@ -464,3 +467,58 @@ export type IEmailGetResponse = IGetResponse<IEmailProperties>;
 export type IEmailSetArguments = ISetArguments<IEmailProperties>;
 
 export type IEmailSetResponse = ISetResponse<IEmailProperties>;
+
+/**
+ * See https://jmap.io/spec-mail.html#email-submission
+ */
+export interface DeliveryStatus {
+  smtpReply: string;
+  delivered: 'queued' | 'yes' | 'no' | 'unknown';
+  displayed: 'unknown' | 'yes';
+}
+
+/**
+ * See https://jmap.io/spec-mail.html#email-submission
+ */
+export interface Address {
+  email: string;
+  parameters: any | null;
+}
+/**
+ * See https://jmap.io/spec-mail.html#email-submission
+ */
+export interface Envelope {
+  mailFrom: Address;
+  rcptTo: Address[];
+}
+/**
+ * See https://jmap.io/spec-mail.html#email-submission
+ */
+export interface IEmailSubmissionProperties {
+  id: string;
+  identityId: string;
+  emailId: string;
+  threadId: string;
+  envelope: Envelope | null;
+  sendAt: Date;
+  undoStatus: 'pending' | 'final' | 'canceled';
+  deliveryStatus: { [id: string]: DeliveryStatus } | null;
+  dsnBlobIds: string[];
+  mdnBlobIds: string[];
+}
+
+/**
+ * See https://jmap.io/spec-mail.html#emailget
+ */
+export type IEmailSubmissionGetArguments = IGetArguments<IEmailSubmissionProperties>;
+
+export type IEmailSubmissionChangesArguments = IChangesArguments;
+
+export type IEmailSubmissionResponse = IGetResponse<IEmailSubmissionProperties>;
+
+export type IEmailSubmissionSetArguments = ISetArguments<IEmailSubmissionProperties> & {
+  onSuccessUpdateEmail?: { [jsonpointer: string]: any } | null;
+  onSuccessDestroyEmail?: string[] | null;
+};
+
+export type IEmailSubmissionSetResponse = ISetResponse<IEmailSubmissionProperties>;
