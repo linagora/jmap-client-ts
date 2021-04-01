@@ -482,7 +482,7 @@ export interface DeliveryStatus {
  */
 export interface Address {
   email: string;
-  parameters: any | null;
+  parameters?: { [parameterName: string]: string | null } | null;
 }
 /**
  * See https://jmap.io/spec-mail.html#email-submission
@@ -500,9 +500,9 @@ export interface IEmailSubmissionProperties {
   emailId: string;
   threadId: string;
   envelope: Envelope | null;
-  sendAt: IUtcDate;
+  sendAt: Date;
   undoStatus: 'pending' | 'final' | 'canceled';
-  deliveryStatus: { [id: string]: DeliveryStatus } | null;
+  deliveryStatus: { [recipientEmailAddress: string]: DeliveryStatus } | null;
   dsnBlobIds: string[];
   mdnBlobIds: string[];
 }
@@ -531,7 +531,11 @@ export type IEmailSubmissionResponse = IGetResponse<IEmailSubmissionProperties>;
  * See https://jmap.io/spec-mail.html#emailsubmissionset
  */
 export type IEmailSubmissionSetArguments = ISetArguments<IEmailSubmissionProperties> & {
-  onSuccessUpdateEmail?: { [jsonpointer: string]: any } | null;
+  onSuccessUpdateEmail?: {
+    [emailSubmissionId: string]: {
+      [id: string]: Partial<IEmailProperties> & { [jsonPointer: string]: any };
+    };
+  } | null;
   onSuccessDestroyEmail?: string[] | null;
 };
 
