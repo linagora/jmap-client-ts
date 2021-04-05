@@ -500,7 +500,7 @@ export interface IEmailSubmissionProperties {
   emailId: string;
   threadId: string;
   envelope: Envelope | null;
-  sendAt: Date;
+  sendAt: IUtcDate;
   undoStatus: 'pending' | 'final' | 'canceled';
   deliveryStatus: { [recipientEmailAddress: string]: DeliveryStatus } | null;
   dsnBlobIds: string[];
