@@ -7,6 +7,8 @@ describe('jmap-client-ts unittests', () => {
   const mockTransportGet = jest.fn();
   const mockTransportPost = jest.fn();
 
+  const accountId = '123456789abcdef';
+
   axiosTransport.get = mockTransportGet;
   axiosTransport.post = mockTransportPost;
 
@@ -26,11 +28,13 @@ describe('jmap-client-ts unittests', () => {
   it('email submission set request is correct', () => {
     mockTransportPost.mockReturnValueOnce(Promise.resolve());
 
+    const emailId = '123456789email';
+
     client.emailSubmission_set({
-      accountId: 'random-account-id',
+      accountId: accountId,
       create: {
         random: {
-          emailId: 'random-id',
+          emailId: emailId,
         },
       },
     });
@@ -39,10 +43,10 @@ describe('jmap-client-ts unittests', () => {
       [
         'EmailSubmission/set',
         {
-          accountId: 'random-account-id',
+          accountId: accountId,
           create: {
             random: {
-              emailId: 'random-id',
+              emailId: emailId,
             },
           },
         },
@@ -54,17 +58,19 @@ describe('jmap-client-ts unittests', () => {
   it('email submission get request is correct', () => {
     mockTransportPost.mockReturnValueOnce(Promise.resolve());
 
+    const ids = ['random-id1', 'random-id2'];
+
     client.emailSubmission_get({
-      accountId: 'random-account-id',
-      ids: ['random-id1', 'random-id2'],
+      accountId: accountId,
+      ids: ids,
     });
 
     expect(mockTransportPost.mock.calls[0][1].methodCalls).toStrictEqual([
       [
         'EmailSubmission/get',
         {
-          accountId: 'random-account-id',
-          ids: ['random-id1', 'random-id2'],
+          accountId: accountId,
+          ids: ids,
         },
         '0',
       ],
@@ -75,7 +81,7 @@ describe('jmap-client-ts unittests', () => {
     mockTransportPost.mockReturnValueOnce(Promise.resolve());
 
     client.emailSubmission_changes({
-      accountId: 'random-account-id',
+      accountId: accountId,
       sinceState: 'state1',
     });
 
@@ -83,7 +89,7 @@ describe('jmap-client-ts unittests', () => {
       [
         'EmailSubmission/changes',
         {
-          accountId: 'random-account-id',
+          accountId: accountId,
           sinceState: 'state1',
         },
         '0',
