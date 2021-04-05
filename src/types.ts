@@ -525,7 +525,7 @@ export type IEmailSubmissionChangesResponse = IChangesResponse;
 /**
  * See https://jmap.io/spec-mail.html#emailsubmissionget
  */
-export type IEmailSubmissionResponse = IGetResponse<IEmailSubmissionProperties>;
+export type IEmailSubmissionGetResponse = IGetResponse<IEmailSubmissionProperties>;
 
 /**
  * See https://jmap.io/spec-mail.html#emailsubmissionset

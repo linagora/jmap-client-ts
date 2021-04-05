@@ -17,7 +17,7 @@ import {
   IMailboxChangesArguments,
   IMailboxChangesResponse,
   IEmailSubmissionSetArguments,
-  IEmailSubmissionResponse,
+  IEmailSubmissionGetResponse,
   IEmailSubmissionGetArguments,
   IEmailSubmissionChangesArguments,
   IEmailSubmissionSetResponse,
@@ -116,8 +116,8 @@ export class Client {
 
   public emailSubmission_get(
     args: IEmailSubmissionGetArguments,
-  ): Promise<IEmailSubmissionResponse> {
-    return this.request<IEmailSubmissionResponse>('EmailSubmission/get', args);
+  ): Promise<IEmailSubmissionGetResponse> {
+    return this.request<IEmailSubmissionGetResponse>('EmailSubmission/get', args);
   }
 
   public emailSubmission_changes(
