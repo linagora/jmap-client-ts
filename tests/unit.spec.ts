@@ -37,6 +37,12 @@ describe('jmap-client-ts unittests', () => {
           emailId: emailId,
         },
       },
+      onSuccessUpdateEmail: {
+        random: {
+          something: null,
+        },
+      },
+      onSuccessDestroyEmail: ['a'],
     });
 
     expect(mockTransportPost.mock.calls[0][1].methodCalls).toStrictEqual([
@@ -49,6 +55,12 @@ describe('jmap-client-ts unittests', () => {
               emailId: emailId,
             },
           },
+          onSuccessUpdateEmail: {
+            random: {
+              something: null,
+            },
+          },
+          onSuccessDestroyEmail: ['a'],
         },
         '0',
       ],
