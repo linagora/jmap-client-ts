@@ -26,7 +26,11 @@ describe('jmap-client-ts unittests', () => {
   });
 
   it('email submission set request is correct', () => {
-    mockTransportPost.mockReturnValueOnce(Promise.resolve());
+    mockTransportPost.mockReturnValueOnce(
+      Promise.resolve({
+        methodResponses: [[null, null]],
+      }),
+    );
 
     const emailId = '123456789email';
 
@@ -68,7 +72,11 @@ describe('jmap-client-ts unittests', () => {
   });
 
   it('email submission get request is correct', () => {
-    mockTransportPost.mockReturnValueOnce(Promise.resolve());
+    mockTransportPost.mockReturnValueOnce(
+      Promise.resolve({
+        methodResponses: [[null, null]],
+      }),
+    );
 
     const ids = ['random-id1', 'random-id2'];
 
@@ -90,7 +98,11 @@ describe('jmap-client-ts unittests', () => {
   });
 
   it('email submission changes request is correct', () => {
-    mockTransportPost.mockReturnValueOnce(Promise.resolve());
+    mockTransportPost.mockReturnValueOnce(
+      Promise.resolve({
+        methodResponses: [[null, null]],
+      }),
+    );
 
     client.emailSubmission_changes({
       accountId: accountId,
