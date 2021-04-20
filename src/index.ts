@@ -22,6 +22,8 @@ import {
   IEmailSubmissionChangesArguments,
   IEmailSubmissionSetResponse,
   IEmailSubmissionChangesResponse,
+  IEmailChangesArguments,
+  IEmailChangesResponse,
 } from './types';
 
 export class Client {
@@ -104,6 +106,10 @@ export class Client {
 
   public email_get(args: IEmailGetArguments): Promise<IEmailGetResponse> {
     return this.request<IEmailGetResponse>('Email/get', args);
+  }
+
+  public email_changes(args: IEmailChangesArguments): Promise<IEmailChangesResponse> {
+    return this.request<IEmailChangesResponse>('Email/changes', args);
   }
 
   public email_query(args: IEmailQueryArguments): Promise<IEmailQueryResponse> {

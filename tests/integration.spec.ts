@@ -3,7 +3,7 @@ import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { Client } from '../src/index';
 import { AxiosTransport } from '../src/utils/axios-transport';
 import axios from 'axios';
-import { IMailboxChangesResponse } from '../src/types';
+import { IEmailChangesResponse, IMailboxChangesResponse } from '../src/types';
 
 describe('jmap-client-ts', () => {
   const DEFAULT_TIMEOUT = 60000;
@@ -106,6 +106,28 @@ describe('jmap-client-ts', () => {
     });
 
     expect(emailGetResponse.accountId).toBeDefined();
+  });
+
+  it('should have email_changes working', async () => {
+    const getResponse = await client.email_get({
+      accountId: client.getAccountIds()[0],
+      ids: [],
+    });
+
+    const changesResponse = await client.email_changes({
+      accountId: client.getAccountIds()[0],
+      sinceState: getResponse.state,
+    });
+
+    expect(changesResponse).toMatchObject<IEmailChangesResponse>({
+      accountId: client.getAccountIds()[0],
+      oldState: getResponse.state,
+      newState: getResponse.state,
+      hasMoreChanges: false,
+      created: [],
+      updated: [],
+      destroyed: [],
+    });
   });
 
   it('should have email_set working', async () => {
