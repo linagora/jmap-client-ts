@@ -16,6 +16,12 @@ import {
   IEmailSetArguments,
   IMailboxChangesArguments,
   IMailboxChangesResponse,
+  IEmailSubmissionSetArguments,
+  IEmailSubmissionGetResponse,
+  IEmailSubmissionGetArguments,
+  IEmailSubmissionChangesArguments,
+  IEmailSubmissionSetResponse,
+  IEmailSubmissionChangesResponse,
 } from './types';
 
 export class Client {
@@ -106,6 +112,24 @@ export class Client {
 
   public email_set(args: IEmailSetArguments): Promise<IEmailSetResponse> {
     return this.request<IEmailSetResponse>('Email/set', args);
+  }
+
+  public emailSubmission_get(
+    args: IEmailSubmissionGetArguments,
+  ): Promise<IEmailSubmissionGetResponse> {
+    return this.request<IEmailSubmissionGetResponse>('EmailSubmission/get', args);
+  }
+
+  public emailSubmission_changes(
+    args: IEmailSubmissionChangesArguments,
+  ): Promise<IEmailSubmissionChangesResponse> {
+    return this.request<IEmailSubmissionChangesResponse>('EmailSubmission/changes', args);
+  }
+
+  public emailSubmission_set(
+    args: IEmailSubmissionSetArguments,
+  ): Promise<IEmailSubmissionSetResponse> {
+    return this.request<IEmailSubmissionSetResponse>('EmailSubmission/set', args);
   }
 
   private request<ResponseType>(methodName: IMethodName, args: IArguments) {
