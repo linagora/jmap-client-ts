@@ -128,6 +128,43 @@ describe('jmap-client-ts', () => {
       updated: [],
       destroyed: [],
     });
+
+    const getMailboxesResponse = await client.mailbox_get({
+      accountId: client.getAccountIds()[0],
+      ids: null,
+    });
+
+    const draftMailboxId = <string>(
+      getMailboxesResponse.list.find(mailbox => mailbox.name.toLowerCase() === 'drafts')?.id
+    );
+
+    const emailCreatedResponse = await client.email_set({
+      accountId: client.getAccountIds()[0],
+      create: {
+        emailToCreateId: {
+          mailboxIds: {
+            [draftMailboxId]: true,
+          },
+        },
+      },
+    });
+
+    const emailCreatedId = emailCreatedResponse.created?.emailToCreateId.id as string;
+
+    const newChangesResponse = await client.email_changes({
+      accountId: client.getAccountIds()[0],
+      sinceState: getResponse.state,
+    });
+
+    expect(newChangesResponse).toMatchObject<IEmailChangesResponse>({
+      accountId: client.getAccountIds()[0],
+      oldState: getResponse.state,
+      newState: emailCreatedResponse.newState,
+      hasMoreChanges: false,
+      created: [emailCreatedId],
+      updated: [],
+      destroyed: [],
+    });
   });
 
   it('should have email_set working', async () => {
