@@ -55,6 +55,20 @@ describe('jmap-client-ts', () => {
     await container.stop();
   });
 
+  it('should get error correctly', async () => {
+    let error = null;
+    try {
+      await client.mailbox_get({
+        accountId: 'unknown-account-id',
+        ids: null,
+      });
+    } catch (e) {
+      error = e;
+    }
+
+    expect(error.type).toEqual('accountNotFound');
+  });
+
   it('should have mailbox_get working', async () => {
     const response = await client.mailbox_get({
       accountId: client.getAccountIds()[0],

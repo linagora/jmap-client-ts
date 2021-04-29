@@ -327,6 +327,13 @@ export type IMailboxSetArguments = ISetArguments<IMailboxProperties>;
 export type IMailboxSetResponse = ISetResponse<IMailboxProperties>;
 
 /**
+ * See https://jmap.io/spec-core.html#method-level-errors
+ */
+export interface IError {
+  type: IErrorType;
+}
+
+/**
  * See https://jmap.io/spec-core.html#creation-of-jmap-error-codes-registry
  */
 export type IErrorType =
