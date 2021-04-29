@@ -1,23 +1,21 @@
 import { Client } from '../src';
-import { AxiosTransport } from '../src/utils/axios-transport';
-import axios from 'axios';
 
 describe('jmap-client-ts unittests', () => {
-  const axiosTransport = new AxiosTransport(axios);
   const mockTransportGet = jest.fn();
   const mockTransportPost = jest.fn();
+  const mockTransport = { get: mockTransportGet, post: mockTransportPost };
 
   const accountId = '123456789abcdef';
 
-  axiosTransport.get = mockTransportGet;
-  axiosTransport.post = mockTransportPost;
+  mockTransport.get = mockTransportGet;
+  mockTransport.post = mockTransportPost;
 
   const client = new Client({
     sessionUrl: 'session-url',
     accessToken: '',
     httpHeaders: {},
     overriddenApiUrl: 'api-url',
-    transport: axiosTransport,
+    transport: mockTransport,
   });
 
   beforeEach(async () => {

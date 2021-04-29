@@ -3,6 +3,7 @@ export type IMethodName =
   | 'Mailbox/changes'
   | 'Mailbox/set'
   | 'Email/get'
+  | 'Email/changes'
   | 'Email/query'
   | 'Email/set'
   | 'EmailSubmission/get'
@@ -378,6 +379,8 @@ export interface IMailboxEmailList {
   created: Date;
   deleted: Date | null;
 }
+
+export type IEmailChangesArguments = IChangesArguments;
 
 export type IEmailChangesResponse = IChangesResponse;
 
