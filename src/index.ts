@@ -24,7 +24,7 @@ import {
   IEmailSubmissionChangesResponse,
   IEmailChangesArguments,
   IEmailChangesResponse,
-  IError,
+  IInvocation,
 } from './types';
 
 export class Client {
@@ -144,7 +144,7 @@ export class Client {
     return this.transport
       .post<{
         sessionState: string;
-        methodResponses: ([IMethodName, ResponseType, string] | ['error', IError, string])[];
+        methodResponses: IInvocation<ResponseType>[];
       }>(
         apiUrl,
         {

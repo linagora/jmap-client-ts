@@ -10,11 +10,15 @@ export type IMethodName =
   | 'EmailSubmission/changes'
   | 'EmailSubmission/set';
 
+export type IErrorName = 'error';
+
 /**
  * See https://jmap.io/spec-core.html#the-invocation-data-type
- * [ name, arguments, id ]
+ * [ name, arguments, methodCallId ]
  */
-export type IMethodCall = [IMethodName, IArguments, string];
+export type IInvocation<ArgumentsType> =
+  | [IMethodName, ArgumentsType, string]
+  | [IErrorName, IError, string];
 
 export type IEntityProperties = IMailboxProperties | IEmailProperties | IEmailSubmissionProperties;
 
@@ -26,7 +30,8 @@ export type IFilterCondition = IMailboxFilterCondition | IEmailFilterCondition;
 export type IArguments =
   | IGetArguments<IEntityProperties>
   | ISetArguments<IEntityProperties>
-  | IQueryArguments<IEmailFilterCondition>;
+  | IQueryArguments<IEmailFilterCondition>
+  | IChangesArguments;
 export interface IReplaceableAccountId {
   /**
    * If null, the library will replace its value by default account id.
@@ -151,7 +156,7 @@ export interface IComparator {
  */
 export interface IRequest {
   using: string[];
-  methodCalls: IMethodCall[];
+  methodCalls: IInvocation<IArguments>[];
   createdIds?: { [creationId: string]: string };
 }
 
