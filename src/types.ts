@@ -12,13 +12,16 @@ export type IMethodName =
 
 export type IErrorName = 'error';
 
+export type IInvocationName = IMethodName | IErrorName;
+
 /**
  * See https://jmap.io/spec-core.html#the-invocation-data-type
- * [ name, arguments, methodCallId ]
  */
-export type IInvocation<ArgumentsType> =
-  | [IMethodName, ArgumentsType, string]
-  | [IErrorName, IError, string];
+export type IInvocation<ArgumentsType> = [
+  name: IInvocationName,
+  arguments: ArgumentsType,
+  methodCallId: string,
+];
 
 export type IEntityProperties = IMailboxProperties | IEmailProperties | IEmailSubmissionProperties;
 
