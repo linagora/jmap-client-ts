@@ -24,6 +24,7 @@ import {
   IEmailSubmissionChangesResponse,
   IEmailChangesArguments,
   IEmailChangesResponse,
+  IInvocation,
 } from './types';
 
 export class Client {
@@ -143,7 +144,7 @@ export class Client {
     return this.transport
       .post<{
         sessionState: string;
-        methodResponses: [[IMethodName, ResponseType, string]];
+        methodResponses: IInvocation<ResponseType>[];
       }>(
         apiUrl,
         {
@@ -152,7 +153,15 @@ export class Client {
         },
         this.httpHeaders,
       )
-      .then(response => response.methodResponses[0][1]);
+      .then(response => {
+        const methodResponse = response.methodResponses[0];
+
+        if (methodResponse[0] === 'error') {
+          throw methodResponse[1];
+        }
+
+        return methodResponse[1];
+      });
   }
 
   private replaceAccountId<U extends IReplaceableAccountId>(input: U): U {

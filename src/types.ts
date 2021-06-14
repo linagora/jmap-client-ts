@@ -10,11 +10,18 @@ export type IMethodName =
   | 'EmailSubmission/changes'
   | 'EmailSubmission/set';
 
+export type IErrorName = 'error';
+
+export type IInvocationName = IMethodName | IErrorName;
+
 /**
  * See https://jmap.io/spec-core.html#the-invocation-data-type
- * [ name, arguments, id ]
  */
-export type IMethodCall = [IMethodName, IArguments, string];
+export type IInvocation<ArgumentsType> = [
+  name: IInvocationName,
+  arguments: ArgumentsType,
+  methodCallId: string,
+];
 
 export type IEntityProperties = IMailboxProperties | IEmailProperties | IEmailSubmissionProperties;
 
@@ -26,7 +33,8 @@ export type IFilterCondition = IMailboxFilterCondition | IEmailFilterCondition;
 export type IArguments =
   | IGetArguments<IEntityProperties>
   | ISetArguments<IEntityProperties>
-  | IQueryArguments<IEmailFilterCondition>;
+  | IQueryArguments<IEmailFilterCondition>
+  | IChangesArguments;
 export interface IReplaceableAccountId {
   /**
    * If null, the library will replace its value by default account id.
@@ -151,7 +159,7 @@ export interface IComparator {
  */
 export interface IRequest {
   using: string[];
-  methodCalls: IMethodCall[];
+  methodCalls: IInvocation<IArguments>[];
   createdIds?: { [creationId: string]: string };
 }
 
@@ -325,6 +333,13 @@ export interface IMailboxChangesResponse extends IChangesResponse {
 export type IMailboxSetArguments = ISetArguments<IMailboxProperties>;
 
 export type IMailboxSetResponse = ISetResponse<IMailboxProperties>;
+
+/**
+ * See https://jmap.io/spec-core.html#method-level-errors
+ */
+export interface IError {
+  type: IErrorType;
+}
 
 /**
  * See https://jmap.io/spec-core.html#creation-of-jmap-error-codes-registry
