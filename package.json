@@ -2,7 +2,7 @@
   "name": "jmap-client-ts",
   "version": "1.0.0",
   "description": "Jmap Library in Typescript",
-  "main": "jmap-client-ts.js",
+  "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
     "lint": "eslint 'src/**/*.ts' 'tests/**/*.ts'",
