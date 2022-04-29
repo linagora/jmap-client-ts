@@ -1,3 +1,6 @@
+export const ENTITY_TYPES = ['Mailbox', 'Email', 'EmailSubmission'] as const;
+export type IEntityType = typeof ENTITY_TYPES[number];
+
 export type IMethodName =
   | 'Mailbox/get'
   | 'Mailbox/changes'
@@ -144,6 +147,37 @@ export type IEmailQueryArguments = IQueryArguments<IEmailFilterCondition>;
 export type IEmailQueryResponse = IQueryResponse;
 
 /**
+ * See https://jmap.io/spec-core.html#the-statechange-object
+ */
+export interface IStateChange {
+  '@type': 'StateChange';
+  changed: {
+    [accountId: string]: ITypeState;
+  };
+}
+
+/**
+ * See https://tools.ietf.org/html/rfc8887#section-4.3.5.2
+ */
+export interface IWebSocketPushEnable {
+  '@type': 'WebSocketPushEnable';
+  dataTypes: string[] | null;
+  pushState?: string;
+}
+
+/**
+ * See https://tools.ietf.org/html/rfc8887#section-4.3.5.3
+ */
+export interface IWebSocketPushDisable {
+  '@type': 'WebSocketPushDisable';
+}
+
+/**
+ * See https://jmap.io/spec-core.html#the-statechange-object
+ */
+export type ITypeState = Partial<{ [_ in IEntityType]: string }>;
+
+/**
  * See https://jmap.io/spec-core.html#query
  */
 export interface IFilterOperator<FilterCondition> {
@@ -173,14 +207,20 @@ export interface IRequest {
  * See https://jmap.io/spec-core.html#the-jmap-session-resource
  */
 export interface ICapabilities {
-  maxSizeUpload: number;
-  maxConcurrentUpload: number;
-  maxSizeRequest: number;
-  maxConcurrentRequests: number;
-  maxCallsInRequest: number;
-  maxObjectsInGet: number;
-  maxObjectsInSet: number;
-  collationAlgorithms: string[];
+  'urn:ietf:params:jmap:core': {
+    maxSizeUpload: number;
+    maxConcurrentUpload: number;
+    maxSizeRequest: number;
+    maxConcurrentRequests: number;
+    maxCallsInRequest: number;
+    maxObjectsInGet: number;
+    maxObjectsInSet: number;
+    collationAlgorithms: string[];
+  };
+  'urn:ietf:params:jmap:websocket': {
+    url: string;
+    supportsPush: boolean;
+  };
 }
 
 /**

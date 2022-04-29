@@ -31,9 +31,13 @@
     "url": "https://github.com/linagora/jmap-client-ts/issues"
   },
   "homepage": "https://github.com/linagora/jmap-client-ts#README.md",
+  "dependencies": {
+    "isomorphic-ws": "4.0.1"
+  },
   "devDependencies": {
     "@types/jest": "^26.0.20",
     "@types/node-fetch": "^2.5.8",
+    "@types/ws": "^8.5.0",
     "@typescript-eslint/eslint-plugin": "^4.13.0",
     "@typescript-eslint/parser": "^4.13.0",
     "@types/prettier": "2.6.0",
@@ -49,9 +53,11 @@
     "lint-staged": "^10.5.3",
     "node-fetch": "^2.6.1",
     "prettier": "2.1.2",
+    "rxjs": "^7.5.5",
     "testcontainers": "^8.10.1",
     "ts-jest": "^26.4.4",
     "ts-node": "9.0.0",
-    "typescript": "4.0.3"
+    "typescript": "^4.6.2",
+    "ws": "^8.5.0"
   }
 }

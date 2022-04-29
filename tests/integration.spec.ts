@@ -20,6 +20,8 @@ describe('jmap-client-ts', () => {
 
   let webadminUrl: string;
   let sessionUrl: string;
+  let overriddenApiUrl: string;
+  let overriddenPushUrl: string;
   let currentUserNumber = 0;
   let currentUser: string;
   let container: StartedTestContainer;
@@ -50,6 +52,8 @@ describe('jmap-client-ts', () => {
 
     webadminUrl = `http://${container.getHost()}:${container.getMappedPort(WEBADMIN_PORT)}`;
     sessionUrl = `http://${container.getHost()}:${container.getMappedPort(JMAP_PORT)}/jmap/session`;
+    overriddenApiUrl = `http://${container.getHost()}:${container.getMappedPort(JMAP_PORT)}/jmap`;
+    overriddenPushUrl = `ws://${container.getHost()}:${container.getMappedPort(JMAP_PORT)}/jmap/ws`;
   }, DEFAULT_TIMEOUT);
 
   beforeEach(async () => {
@@ -67,6 +71,8 @@ describe('jmap-client-ts', () => {
       sessionUrl,
       accessToken: '',
       httpHeaders: generateHeaders(currentUser, PASSWORD),
+      overriddenApiUrl,
+      overriddenPushUrl,
       transport: new AxiosTransport(axios),
     });
 
@@ -94,6 +100,22 @@ describe('jmap-client-ts', () => {
     }
 
     expect(error && error.type).toEqual('accountNotFound');
+  });
+
+  it('should have push working', () => {
+    return new Promise<void>(resolve => {
+      client.pushStart().then(() => {
+        const subscription = client.pushMailbox().subscribe(change => {
+          expect(change[client.getFirstAccountId()]).toBeDefined();
+          subscription.unsubscribe();
+          resolve();
+        });
+        client.mailbox_get({
+          accountId: client.getFirstAccountId(),
+          ids: null,
+        });
+      });
+    });
   });
 
   it('should have mailbox_get working', async () => {
