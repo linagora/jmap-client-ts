@@ -9,9 +9,11 @@
     "lint:fix": "npm run lint -- --quiet --fix",
     "test": "jest",
     "prepare": "npm run build",
-    "prePublish": "npm run build",
-    "postinstall": "npm run build"
+    "prePublish": "npm run build"
   },
+  "files": [
+    "lib/**/*"
+  ],
   "directories": {
     "lib": "src",
     "test": "tests"
