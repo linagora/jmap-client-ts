@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OpenPaaS-Suite/jmap-client-ts.git"
+    "url": "git+https://github.com/linagora/jmap-client-ts.git"
   },
   "keywords": [
     "jmap"
@@ -28,9 +28,9 @@
   "author": "Alexandre Lagane",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/OpenPaaS-Suite/jmap-client-ts/issues"
+    "url": "https://github.com/linagora/jmap-client-ts/issues"
   },
-  "homepage": "https://github.com/OpenPaaS-Suite/jmap-client-ts#README.md",
+  "homepage": "https://github.com/linagora/jmap-client-ts#README.md",
   "devDependencies": {
     "@types/jest": "^26.0.20",
     "@types/node-fetch": "^2.5.8",
