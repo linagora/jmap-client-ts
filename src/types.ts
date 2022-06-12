@@ -214,7 +214,10 @@ export interface ISession {
   state: string;
 }
 
-export type EmailHeader = string;
+export interface EmailHeader {
+  name: string;
+  value: string;
+}
 
 export type Attachment = File;
 
