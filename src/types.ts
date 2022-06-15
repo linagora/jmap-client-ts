@@ -6,6 +6,7 @@ export type IMethodName =
   | 'Email/changes'
   | 'Email/query'
   | 'Email/set'
+  | 'Thread/get'
   | 'EmailSubmission/get'
   | 'EmailSubmission/changes'
   | 'EmailSubmission/set';
@@ -118,6 +119,7 @@ export interface IQueryArguments<FilterCondition extends IFilterCondition>
   anchorOffset?: number;
   limit?: number;
   calculateTotal?: boolean;
+  collapseThreads?: boolean;
 }
 
 /**
