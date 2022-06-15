@@ -44,10 +44,20 @@ export interface IReplaceableAccountId {
 }
 
 /**
+ * See https://jmap.io/spec-core.html#references-to-previous-method-results
+ */
+export interface IResultReference {
+  resultOf: string;
+  name: IMethodName;
+  path: string;
+}
+
+/**
  * See https://jmap.io/spec-core.html#get
  */
 export interface IGetArguments<Properties extends IEntityProperties> extends IReplaceableAccountId {
-  ids: string[] | null;
+  ids?: string[] | null;
+  '#ids'?: IResultReference;
   properties?: (keyof Properties)[];
 }
 
