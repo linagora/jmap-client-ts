@@ -1,0 +1,12 @@
+From: <user1@localhost>
+To: <foo@example.com>
+Subject: Re: test
+Date: Thu, 16 Jun 2022 19:50:53 +0800
+Message-ID: <abcdefg@message-id.localhost>
+In-Reply-To: <1234567@message-id.example.com>
+MIME-Version: 1.0
+Content-Type:text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+> Hello!
+World!

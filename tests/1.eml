@@ -1,0 +1,12 @@
+Return-Path: <foo@example.com>
+Delivered-To: user1@localhost
+From: <foo@example.com>
+To: <user1@localhost>
+Subject: test
+Date: Thu, 16 Jun 2022 19:49:24 +0800
+Message-ID: <1234567@message-id.example.com>
+MIME-Version: 1.0
+Content-Type:text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+Hello!

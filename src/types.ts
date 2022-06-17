@@ -6,6 +6,7 @@ export type IMethodName =
   | 'Email/changes'
   | 'Email/query'
   | 'Email/set'
+  | 'Email/import'
   | 'Thread/get'
   | 'EmailSubmission/get'
   | 'EmailSubmission/changes'
@@ -24,7 +25,11 @@ export type IInvocation<ArgumentsType> = [
   methodCallId: string,
 ];
 
-export type IEntityProperties = IMailboxProperties | IEmailProperties | IEmailSubmissionProperties;
+export type IEntityProperties =
+  | IMailboxProperties
+  | IEmailProperties
+  | IEmailSubmissionProperties
+  | IThreadProperties;
 
 /**
  * See https://jmap.io/spec-core.html#query
@@ -301,7 +306,44 @@ export interface IEmailAddress {
  */
 export interface IThreadProperties {
   id: string;
-  emailsIds: string[];
+  emailIds: string[];
+}
+
+export type IThreadGetArguments = IGetArguments<IThreadProperties>;
+
+export type IThreadGetResponse = IGetResponse<IThreadProperties>;
+
+/**
+ * See https://jmap.io/spec-core.html#uploading-binary-data
+ */
+export interface IUploadResponse {
+  accountId: string;
+  blobId: string;
+  type: string;
+  size: number;
+}
+
+/**
+ * See https://jmap.io/spec-mail.html#emailimport
+ */
+export interface IEmailImport {
+  blobId: string;
+  mailboxIds: { [Id: string]: ITrue };
+  keywords: IEmailKeywords;
+  receivedAt: IUtcDate;
+}
+
+export interface IEmailImportArguments extends IReplaceableAccountId {
+  ifInState: string | null;
+  emails: { [Id: string]: IEmailImport };
+}
+
+export interface IEmailImportResponse {
+  accountId: string;
+  oldState?: string;
+  newState: string;
+  created?: { [Id: string]: IEmailProperties };
+  notCreated?: { [id: string]: ISetError };
 }
 
 /**

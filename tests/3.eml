@@ -1,0 +1,16 @@
+Return-Path: <foo@example.com>
+Delivered-To: user1@localhost
+From: <foo@example.com>
+To: <user1@localhost>
+Subject: Re: test
+Date: Thu, 16 Jun 2022 19:58:19 +0800
+Message-ID: <7654321@message-id.example.com>
+In-Reply-To: <abcdefg@message-id.localhost>
+References: <1234567@message-id.example.com>
+MIME-Version: 1.0
+Content-Type:text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+>> Hello!
+> World!
+Hello, World!
