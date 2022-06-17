@@ -25,6 +25,11 @@ import {
   IEmailChangesArguments,
   IEmailChangesResponse,
   IInvocation,
+  IUploadResponse,
+  IEmailImportArguments,
+  IEmailImportResponse,
+  IThreadGetArguments,
+  IThreadGetResponse,
 } from './types';
 
 export class Client {
@@ -125,6 +130,14 @@ export class Client {
     return this.request<IEmailSetResponse>('Email/set', args);
   }
 
+  public email_import(args: IEmailImportArguments): Promise<IEmailImportResponse> {
+    return this.request<IEmailImportResponse>('Email/import', args);
+  }
+
+  public thread_get(args: IThreadGetArguments): Promise<IThreadGetResponse> {
+    return this.request<IThreadGetResponse>('Thread/get', args);
+  }
+
   public emailSubmission_get(
     args: IEmailSubmissionGetArguments,
   ): Promise<IEmailSubmissionGetResponse> {
@@ -141,6 +154,20 @@ export class Client {
     args: IEmailSubmissionSetArguments,
   ): Promise<IEmailSubmissionSetResponse> {
     return this.request<IEmailSubmissionSetResponse>('EmailSubmission/set', args);
+  }
+
+  public upload(buffer: ArrayBuffer, type = 'application/octet-stream'): Promise<IUploadResponse> {
+    const uploadUrl = this.getSession().uploadUrl;
+    const accountId = this.getFirstAccountId();
+    const requestHeaders = {
+      ...this.httpHeaders,
+      'Content-Type': type,
+    };
+    return this.transport.post<IUploadResponse>(
+      uploadUrl.replace('{accountId}', encodeURIComponent(accountId)),
+      buffer,
+      requestHeaders,
+    );
   }
 
   private request<ResponseType>(methodName: IMethodName, args: IArguments) {

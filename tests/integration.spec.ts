@@ -3,7 +3,13 @@ import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { Client } from '../src/index';
 import { AxiosTransport } from '../src/utils/axios-transport';
 import axios from 'axios';
-import { IEmailChangesResponse, IMailboxChangesResponse, IError } from '../src/types';
+import {
+  IEmailChangesResponse,
+  IMailboxChangesResponse,
+  IError,
+  IEmailProperties,
+} from '../src/types';
+import { readFileSync } from 'fs';
 
 describe('jmap-client-ts', () => {
   const DEFAULT_TIMEOUT = 60000;
@@ -299,6 +305,107 @@ describe('jmap-client-ts', () => {
 
     expect(response.created).toBeDefined();
     expect(response).toMatchObject(expect.objectContaining(expected));
+  });
+
+  it('should import emails as one thread', async () => {
+    const uploadResponse = await client.upload(readFileSync('./tests/1.eml'), 'message/rfc822');
+
+    expect(uploadResponse.size).toEqual(301);
+    expect(uploadResponse.type).toEqual('message/rfc822');
+    expect(uploadResponse.blobId).toBeDefined();
+
+    const getMailboxesResponse = await client.mailbox_get({
+      accountId: client.getAccountIds()[0],
+      ids: null,
+    });
+
+    let inboxMailboxId = '';
+    let sentMailboxId = '';
+    getMailboxesResponse.list.forEach(value => {
+      if (value.role == 'inbox') {
+        inboxMailboxId = value.id;
+      }
+      if (value.role == 'sent') {
+        sentMailboxId = value.id;
+      }
+    });
+
+    const importId1 = '1234567';
+    const importId2 = 'abcdefg';
+    const uploadResponse2 = await client.upload(readFileSync('./tests/2.eml'), 'message/rfc822');
+    const dateString = new Date().toISOString();
+
+    let importResponse = await client.email_import({
+      accountId: client.getAccountIds()[0],
+      ifInState: null,
+      emails: {
+        [importId1]: {
+          blobId: uploadResponse.blobId,
+          mailboxIds: {
+            [inboxMailboxId]: true,
+          },
+          keywords: {
+            $seen: true,
+          },
+          receivedAt: dateString,
+        },
+        [importId2]: {
+          blobId: uploadResponse2.blobId,
+          mailboxIds: {
+            [sentMailboxId]: true,
+          },
+          keywords: {
+            $seen: true,
+          },
+          receivedAt: dateString,
+        },
+      },
+    });
+
+    expect(importResponse.created).toBeDefined();
+    expect(importResponse.notCreated).toBeUndefined();
+
+    let created = importResponse.created as { [Id: string]: IEmailProperties };
+    expect(created[importId1]).toBeDefined();
+    expect(created[importId2]).toBeDefined();
+    expect(created[importId2].threadId).toEqual(created[importId1].threadId);
+
+    const threadId = created[importId2].threadId;
+    const emailId1 = created[importId1].id;
+    const emailId2 = created[importId2].id;
+
+    const importId3 = '7654321';
+    const uploadResponse3 = await client.upload(readFileSync('./tests/3.eml'), 'message/rfc822');
+    importResponse = await client.email_import({
+      accountId: client.getAccountIds()[0],
+      ifInState: null,
+      emails: {
+        [importId3]: {
+          blobId: uploadResponse3.blobId,
+          mailboxIds: {
+            [inboxMailboxId]: true,
+          },
+          keywords: {
+            $seen: true,
+          },
+          receivedAt: dateString,
+        },
+      },
+    });
+
+    created = importResponse.created as { [Id: string]: IEmailProperties };
+    expect(created[importId3].threadId).toEqual(threadId);
+    const emailId3 = created[importId3].id;
+
+    const threadGetResponse = await client.thread_get({
+      accountId: client.getAccountIds()[0],
+      ids: [threadId],
+    });
+
+    expect(threadGetResponse.list[0]).toBeDefined();
+    const threadInfo = threadGetResponse.list[0];
+    expect(threadInfo.id).toEqual(threadId);
+    expect(new Set(threadInfo.emailIds)).toEqual(new Set([emailId1, emailId2, emailId3]));
   });
 
   function generateHeaders(username: string, password: string) {
