@@ -49,7 +49,7 @@
     "lint-staged": "^10.5.3",
     "node-fetch": "^2.6.1",
     "prettier": "2.1.2",
-    "testcontainers": "^6.4.1",
+    "testcontainers": "^8.10.1",
     "ts-jest": "^26.4.4",
     "ts-node": "9.0.0",
     "typescript": "4.0.3"

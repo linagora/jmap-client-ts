@@ -62,8 +62,12 @@ export class Client {
     };
   }
 
-  public fetchSession(): Promise<void> {
-    const sessionPromise = this.transport.get<ISession>(this.sessionUrl, this.httpHeaders);
+  public fetchSession(sessionHeaders?: { [headerName: string]: string }): Promise<void> {
+    const requestHeaders = {
+      ...this.httpHeaders,
+      ...(sessionHeaders ? sessionHeaders : {}),
+    };
+    const sessionPromise = this.transport.get<ISession>(this.sessionUrl, requestHeaders);
     return sessionPromise.then(session => {
       this.session = session;
       return;

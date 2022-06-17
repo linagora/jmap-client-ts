@@ -3,7 +3,7 @@ import { GenericContainer, StartedTestContainer } from 'testcontainers';
 import { Client } from '../src/index';
 import { AxiosTransport } from '../src/utils/axios-transport';
 import axios from 'axios';
-import { IEmailChangesResponse, IMailboxChangesResponse } from '../src/types';
+import { IEmailChangesResponse, IMailboxChangesResponse, IError } from '../src/types';
 
 describe('jmap-client-ts', () => {
   const DEFAULT_TIMEOUT = 60000;
@@ -13,20 +13,20 @@ describe('jmap-client-ts', () => {
 
   let webadminUrl: string;
   let sessionUrl: string;
-  let overriddenApiUrl: string;
   let currentUserNumber = 0;
   let currentUser: string;
   let container: StartedTestContainer;
   let client: Client;
 
   beforeAll(async () => {
-    container = await new GenericContainer('linagora/james-memory', 'branch-master')
+    container = await new GenericContainer('apache/james:memory-3.7.0')
       .withExposedPorts(JMAP_PORT, WEBADMIN_PORT)
+      .withCopyFileToContainer('./tests/jmap.properties', '/root/conf/jmap.properties')
+      .withCopyFileToContainer('./tests/keystore', '/root/conf/keystore')
       .start();
 
     webadminUrl = `http://${container.getHost()}:${container.getMappedPort(WEBADMIN_PORT)}`;
     sessionUrl = `http://${container.getHost()}:${container.getMappedPort(JMAP_PORT)}/jmap/session`;
-    overriddenApiUrl = `http://${container.getHost()}:${container.getMappedPort(JMAP_PORT)}/jmap`;
   }, DEFAULT_TIMEOUT);
 
   beforeEach(async () => {
@@ -44,11 +44,15 @@ describe('jmap-client-ts', () => {
       sessionUrl,
       accessToken: '',
       httpHeaders: generateHeaders(currentUser, PASSWORD),
-      overriddenApiUrl,
       transport: new AxiosTransport(axios),
     });
 
-    await client.fetchSession();
+    await client.fetchSession({
+      'X-JMAP-PREFIX': `http://${container.getHost()}:${container.getMappedPort(JMAP_PORT)}`,
+      'X-JMAP-WEBSOCKET-PREFIX': `http://${container.getHost()}:${container.getMappedPort(
+        JMAP_PORT,
+      )}`,
+    });
   });
 
   afterAll(async () => {
@@ -56,17 +60,17 @@ describe('jmap-client-ts', () => {
   });
 
   it('should get error correctly', async () => {
-    let error = null;
+    let error: IError | null = null;
     try {
       await client.mailbox_get({
         accountId: 'unknown-account-id',
         ids: null,
       });
     } catch (e) {
-      error = e;
+      error = e as IError;
     }
 
-    expect(error.type).toEqual('accountNotFound');
+    expect(error && error.type).toEqual('accountNotFound');
   });
 
   it('should have mailbox_get working', async () => {
