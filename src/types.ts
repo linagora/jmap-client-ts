@@ -340,10 +340,10 @@ export interface IEmailImportArguments extends IReplaceableAccountId {
 
 export interface IEmailImportResponse {
   accountId: string;
-  oldState?: string;
+  oldState?: string | null;
   newState: string;
-  created?: { [Id: string]: IEmailProperties };
-  notCreated?: { [id: string]: ISetError };
+  created?: { [Id: string]: IEmailProperties } | null;
+  notCreated?: { [id: string]: ISetError } | null;
 }
 
 /**
