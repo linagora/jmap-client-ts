@@ -1,6 +1,10 @@
 node_modules
 /lib
 
+# test temporary files
+tests/jwt_publickey
+tests/jwt_privatekey
+
 # IDEs and editors
 /.idea
 .project

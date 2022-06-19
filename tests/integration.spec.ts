@@ -9,7 +9,8 @@ import {
   IError,
   IEmailProperties,
 } from '../src/types';
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
+import { generateKeyPairSync } from 'crypto';
 
 describe('jmap-client-ts', () => {
   const DEFAULT_TIMEOUT = 60000;
@@ -25,10 +26,26 @@ describe('jmap-client-ts', () => {
   let client: Client;
 
   beforeAll(async () => {
-    container = await new GenericContainer('apache/james:memory-3.7.0')
+    const { publicKey, privateKey } = generateKeyPairSync('rsa', {
+      modulusLength: 2048,
+      publicKeyEncoding: {
+        type: 'spki',
+        format: 'pem',
+      },
+      privateKeyEncoding: {
+        type: 'pkcs8',
+        format: 'pem',
+      },
+    });
+
+    writeFileSync('./tests/jwt_publickey', publicKey);
+    writeFileSync('./tests/jwt_privatekey', privateKey);
+
+    container = await new GenericContainer('linagora/tmail-backend:memory-0.5.0')
       .withExposedPorts(JMAP_PORT, WEBADMIN_PORT)
       .withCopyFileToContainer('./tests/jmap.properties', '/root/conf/jmap.properties')
-      .withCopyFileToContainer('./tests/keystore', '/root/conf/keystore')
+      .withCopyFileToContainer('./tests/jwt_publickey', '/root/conf/jwt_publickey')
+      .withCopyFileToContainer('./tests/jwt_privatekey', '/root/conf/jwt_privatekey')
       .start();
 
     webadminUrl = `http://${container.getHost()}:${container.getMappedPort(WEBADMIN_PORT)}`;
