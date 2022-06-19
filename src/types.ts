@@ -49,20 +49,10 @@ export interface IReplaceableAccountId {
 }
 
 /**
- * See https://jmap.io/spec-core.html#references-to-previous-method-results
- */
-export interface IResultReference {
-  resultOf: string;
-  name: IMethodName;
-  path: string;
-}
-
-/**
  * See https://jmap.io/spec-core.html#get
  */
 export interface IGetArguments<Properties extends IEntityProperties> extends IReplaceableAccountId {
-  ids?: string[] | null;
-  '#ids'?: IResultReference;
+  ids: string[] | null;
   properties?: (keyof Properties)[];
 }
 
@@ -134,7 +124,6 @@ export interface IQueryArguments<FilterCondition extends IFilterCondition>
   anchorOffset?: number;
   limit?: number;
   calculateTotal?: boolean;
-  collapseThreads?: boolean;
 }
 
 /**
