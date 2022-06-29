@@ -92,6 +92,9 @@ export class Client {
     return Object.keys(session.accounts);
   }
 
+  /**
+   * @deprecated Obsoleted by: getPrimaryAccountId
+   */
   public getFirstAccountId(): string {
     const accountIds = this.getAccountIds();
 
@@ -100,6 +103,14 @@ export class Client {
     }
 
     return accountIds[0];
+  }
+
+  public getPrimaryAccountId(capability = 'urn:ietf:params:jmap:mail'): string {
+    const primaryAccounts = this.session?.primaryAccounts;
+    if (primaryAccounts && capability in primaryAccounts) {
+      return primaryAccounts[capability];
+    }
+    throw new Error('No primary account available for $capability in this session');
   }
 
   public mailbox_get(args: IMailboxGetArguments): Promise<IMailboxGetResponse> {
@@ -158,7 +169,7 @@ export class Client {
 
   public upload(buffer: ArrayBuffer, type = 'application/octet-stream'): Promise<IUploadResponse> {
     const uploadUrl = this.getSession().uploadUrl;
-    const accountId = this.getFirstAccountId();
+    const accountId = this.getPrimaryAccountId();
     const requestHeaders = {
       ...this.httpHeaders,
       'Content-Type': type,
@@ -200,7 +211,7 @@ export class Client {
       ? input
       : {
           ...input,
-          accountId: this.getFirstAccountId(),
+          accountId: this.getPrimaryAccountId(),
         };
   }
 

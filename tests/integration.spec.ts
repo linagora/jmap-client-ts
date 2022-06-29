@@ -98,7 +98,7 @@ describe('jmap-client-ts', () => {
 
   it('should have mailbox_get working', async () => {
     const response = await client.mailbox_get({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       ids: null,
     });
 
@@ -107,17 +107,17 @@ describe('jmap-client-ts', () => {
 
   it('should have mailbox_changes working', async () => {
     const getResponse = await client.mailbox_get({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       ids: null,
     });
 
     const changesResponse = await client.mailbox_changes({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       sinceState: getResponse.state,
     });
 
     expect(changesResponse).toMatchObject<IMailboxChangesResponse>({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       oldState: getResponse.state,
       newState: getResponse.state,
       hasMoreChanges: false,
@@ -130,7 +130,7 @@ describe('jmap-client-ts', () => {
 
   it('should have email_query working', async () => {
     const response = await client.email_query({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
     });
 
     expect(response.accountId).toBeDefined();
@@ -138,11 +138,11 @@ describe('jmap-client-ts', () => {
 
   it('should have email_get working', async () => {
     const emailQueryResponse = await client.email_query({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
     });
 
     const emailGetResponse = await client.email_get({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       ids: emailQueryResponse.ids,
     });
 
@@ -151,17 +151,17 @@ describe('jmap-client-ts', () => {
 
   it('should have email_changes working', async () => {
     const getResponse = await client.email_get({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       ids: [],
     });
 
     const changesResponse = await client.email_changes({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       sinceState: getResponse.state,
     });
 
     expect(changesResponse).toMatchObject<IEmailChangesResponse>({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       oldState: getResponse.state,
       newState: getResponse.state,
       hasMoreChanges: false,
@@ -171,7 +171,7 @@ describe('jmap-client-ts', () => {
     });
 
     const getMailboxesResponse = await client.mailbox_get({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       ids: null,
     });
 
@@ -180,7 +180,7 @@ describe('jmap-client-ts', () => {
     );
 
     const emailCreatedResponse = await client.email_set({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       create: {
         emailToCreateId: {
           mailboxIds: {
@@ -193,12 +193,12 @@ describe('jmap-client-ts', () => {
     const emailCreatedId = emailCreatedResponse.created?.emailToCreateId.id as string;
 
     const newChangesResponse = await client.email_changes({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       sinceState: getResponse.state,
     });
 
     expect(newChangesResponse).toMatchObject<IEmailChangesResponse>({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       oldState: getResponse.state,
       newState: emailCreatedResponse.newState,
       hasMoreChanges: false,
@@ -210,7 +210,7 @@ describe('jmap-client-ts', () => {
 
   it('should have email_set working', async () => {
     const getMailboxesResponse = await client.mailbox_get({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       ids: null,
     });
 
@@ -219,7 +219,7 @@ describe('jmap-client-ts', () => {
     );
 
     const emailSetResponse = await client.email_set({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       create: {
         emailCreated: {
           mailboxIds: {
@@ -245,7 +245,7 @@ describe('jmap-client-ts', () => {
   it('should create mailbox', async () => {
     const id = '674cc24095db49ce';
     const response = await client.mailbox_set({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       create: {
         [id]: {
           name: 'mailbox1',
@@ -265,7 +265,7 @@ describe('jmap-client-ts', () => {
 
   it('should submit email', async () => {
     const getMailboxesResponse = await client.mailbox_get({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       ids: null,
     });
 
@@ -274,7 +274,7 @@ describe('jmap-client-ts', () => {
     );
 
     const emailSetResponse = await client.email_set({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       create: {
         emailCreated: {
           mailboxIds: {
@@ -306,7 +306,7 @@ describe('jmap-client-ts', () => {
 
     const id = '674cc24095db49ce';
     const response = await client.emailSubmission_set({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       create: {
         [id]: {
           emailId: emailSetResponse.created!.emailCreated.id,
@@ -332,7 +332,7 @@ describe('jmap-client-ts', () => {
     expect(uploadResponse.blobId).toBeDefined();
 
     const getMailboxesResponse = await client.mailbox_get({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       ids: null,
     });
 
@@ -353,7 +353,7 @@ describe('jmap-client-ts', () => {
     const dateString = new Date().toISOString();
 
     let importResponse = await client.email_import({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       ifInState: null,
       emails: {
         [importId1]: {
@@ -394,7 +394,7 @@ describe('jmap-client-ts', () => {
     const importId3 = '7654321';
     const uploadResponse3 = await client.upload(readFileSync('./tests/3.eml'), 'message/rfc822');
     importResponse = await client.email_import({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       ifInState: null,
       emails: {
         [importId3]: {
@@ -415,7 +415,7 @@ describe('jmap-client-ts', () => {
     const emailId3 = created[importId3].id;
 
     const threadGetResponse = await client.thread_get({
-      accountId: client.getAccountIds()[0],
+      accountId: client.getPrimaryAccountId(),
       ids: [threadId],
     });
 
