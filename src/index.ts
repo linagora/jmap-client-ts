@@ -106,7 +106,7 @@ export class Client {
   }
 
   public getPrimaryAccountId(capability = 'urn:ietf:params:jmap:mail'): string {
-    const primaryAccounts = this.session?.primaryAccounts;
+    const primaryAccounts = this.getSession().primaryAccounts;
     if (primaryAccounts && capability in primaryAccounts) {
       return primaryAccounts[capability];
     }
