@@ -31,7 +31,8 @@ import {
   IThreadGetArguments,
   IThreadGetResponse,
 } from './types';
-
+import { PushClient } from './push';
+import { Observable } from 'rxjs';
 export class Client {
   private readonly DEFAULT_USING = ['urn:ietf:params:jmap:core', 'urn:ietf:params:jmap:mail'];
 
@@ -40,18 +41,23 @@ export class Client {
 
   private sessionUrl: string;
   private overriddenApiUrl?: string;
+  private overriddenPushUrl?: string;
   private session?: ISession;
+
+  private pushClient: PushClient;
 
   constructor({
     sessionUrl,
     accessToken,
     overriddenApiUrl,
+    overriddenPushUrl,
     transport,
     httpHeaders,
   }: {
     sessionUrl: string;
     accessToken: string;
     overriddenApiUrl?: string;
+    overriddenPushUrl?: string;
     transport: Transport;
     httpHeaders?: { [headerName: string]: string };
   }) {
@@ -59,12 +65,20 @@ export class Client {
     if (overriddenApiUrl) {
       this.overriddenApiUrl = overriddenApiUrl;
     }
+    if (overriddenPushUrl) {
+      this.overriddenPushUrl = overriddenPushUrl;
+    }
     this.transport = transport;
     this.httpHeaders = {
       Accept: 'application/json;jmapVersion=rfc-8621',
       Authorization: `Bearer ${accessToken}`,
       ...(httpHeaders ? httpHeaders : {}),
     };
+    this.pushClient = new PushClient({
+      client: this,
+      transport,
+      httpHeaders: this.httpHeaders,
+    });
   }
 
   public fetchSession(sessionHeaders?: { [headerName: string]: string }): Promise<void> {
@@ -171,7 +185,7 @@ export class Client {
   }
 
   private request<ResponseType>(methodName: IMethodName, args: IArguments) {
-    const apiUrl = this.overriddenApiUrl || this.getSession().apiUrl;
+    const apiUrl = this.getApiUrl();
     return this.transport
       .post<{
         sessionState: string;
@@ -193,6 +207,32 @@ export class Client {
 
         return methodResponse[1];
       });
+  }
+
+  public getApiUrl(): string {
+    return this.overriddenApiUrl || this.getSession().apiUrl;
+  }
+
+  public getPushUrl(): string {
+    return (
+      this.overriddenPushUrl || this.getSession().capabilities['urn:ietf:params:jmap:websocket'].url
+    );
+  }
+
+  public pushStart(): Promise<void> {
+    return this.pushClient.start();
+  }
+
+  public pushMailbox(): Observable<{ [accountId: string]: string }> {
+    return this.pushClient.mailbox();
+  }
+
+  public pushEmail(): Observable<{ [accountId: string]: string }> {
+    return this.pushClient.email();
+  }
+
+  public pushEmailSubmission(): Observable<{ [accountId: string]: string }> {
+    return this.pushClient.emailSubmission();
   }
 
   private replaceAccountId<U extends IReplaceableAccountId>(input: U): U {

@@ -26,3 +26,10 @@ client.mailbox_get({
     ids: null,
 })
 ```
+
+Push (web sockets) usage example for mailboxes
+```typescript
+const mailboxObservable = client.pushMailbox().subscribe();
+client.pushStart();
+```
+Client can also be started before subscribing to `pushMailbox` observable.
