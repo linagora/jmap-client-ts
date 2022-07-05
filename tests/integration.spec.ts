@@ -78,7 +78,7 @@ describe('jmap-client-ts', () => {
 
     await client.fetchSession({
       'X-JMAP-PREFIX': `http://${container.getHost()}:${container.getMappedPort(JMAP_PORT)}`,
-      'X-JMAP-WEBSOCKET-PREFIX': `http://${container.getHost()}:${container.getMappedPort(
+      'X-JMAP-WEBSOCKET-PREFIX': `ws://${container.getHost()}:${container.getMappedPort(
         JMAP_PORT,
       )}`,
     });

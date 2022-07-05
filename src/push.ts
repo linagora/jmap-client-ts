@@ -40,10 +40,17 @@ export class PushClient {
         this.transport
           .post<{
             value: string;
-          }>(`${this.client.getApiUrl()}/ws/ticket`, '', this.httpHeaders)
+          }>(
+            this.client.getSession().capabilities['com:linagora:params:jmap:ws:ticket']
+              .generationEndpoint,
+            '',
+            this.httpHeaders,
+          )
           .then(response => {
             const ticket = response.value;
-            const webSocket = new ws(`${this.client.getPushUrl()}?ticket=${ticket}`);
+            const pushUrl = this.client.getSession().capabilities['urn:ietf:params:jmap:websocket']
+              .url;
+            const webSocket = new ws(`${pushUrl}?ticket=${ticket}`);
             webSocket.onopen = () => {
               this.webSocket = webSocket;
               this.sendSubscriptions(webSocket);

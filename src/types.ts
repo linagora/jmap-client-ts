@@ -221,6 +221,10 @@ export interface ICapabilities {
     url: string;
     supportsPush: boolean;
   };
+  'com:linagora:params:jmap:ws:ticket': {
+    generationEndpoint: string;
+    revocationEndpoint: string;
+  };
 }
 
 /**
