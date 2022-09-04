@@ -8,9 +8,13 @@ Import in in your project (in you `package.json`), you can reference a commit or
 
 Create the client
 ```typescript
+import { Client } from "jmap-client-ts";
+import { FetchTransport } from "jmap-client-ts/lib/utils/fetch-transport";
+
 let client = new Client({
     accessToken: 'myToken',
     sessionUrl: 'http://jmap.example.com/session,
+    transport: new FetchTransport(fetch)
 });
 ```
 
