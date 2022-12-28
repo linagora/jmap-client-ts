@@ -13,7 +13,7 @@ import { FetchTransport } from "jmap-client-ts/lib/utils/fetch-transport";
 
 let client = new Client({
     accessToken: 'myToken',
-    sessionUrl: 'http://jmap.example.com/session,
+    sessionUrl: 'http://jmap.example.com/session',
     transport: new FetchTransport(fetch)
 });
 ```
