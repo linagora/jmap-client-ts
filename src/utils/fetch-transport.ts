@@ -16,7 +16,9 @@ export class FetchTransport implements Transport {
   private fetch: Fetch;
 
   constructor(fetch: Fetch) {
-    this.fetch = fetch;
+    // Wrap to avoid losing execution context when fetch is bound to
+    // a host object (e.g. window in Firefox). See #74.
+    this.fetch = (url, params) => fetch(url, params);
   }
 
   public post<ResponseType>(
