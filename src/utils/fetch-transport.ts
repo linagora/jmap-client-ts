@@ -12,6 +12,11 @@ type Response = {
   status: number;
   json: () => any;
 };
+
+function requestBody(body: any): any {
+  return body instanceof ArrayBuffer || ArrayBuffer.isView(body) ? body : JSON.stringify(body);
+}
+
 export class FetchTransport implements Transport {
   private fetch: Fetch;
 
@@ -54,10 +59,10 @@ export class FetchTransport implements Transport {
   }): Promise<ResponseType> {
     return this.fetch(url, {
       method,
-      body: JSON.stringify(body),
+      body: requestBody(body),
       headers: headers,
     }).then(response => {
-      if (response.status !== 200) {
+      if (response.status < 200 || response.status >= 300) {
         throw new Error(`Request failed, got http status code ${response.status}`);
       }
       return response.json();
