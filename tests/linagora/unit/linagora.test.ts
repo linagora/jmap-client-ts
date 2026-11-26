@@ -35,6 +35,7 @@ const METHODS: Record<LinagoraMethodName, readonly string[]> = {
   'TMailContact/autocomplete': [LINAGORA_CAPABILITIES.contactAutocomplete],
   'PublicAsset/get': [LINAGORA_CAPABILITIES.publicAssets],
   'PublicAsset/set': [LINAGORA_CAPABILITIES.publicAssets],
+  'UnauthenticatedBlobAccess/set': [LINAGORA_CAPABILITIES.unauthenticatedBlobAccess],
   'Mailbox/clear': [LINAGORA_CAPABILITIES.mailboxClear, 'urn:ietf:params:jmap:mail'],
   'CalendarEvent/parse': [LINAGORA_CAPABILITIES.calendarEvent],
   'CalendarEvent/accept': [LINAGORA_CAPABILITIES.calendarEvent],
@@ -178,6 +179,30 @@ describe('Linagora methods', () => {
     expect(sent()).toMatchObject({
       using: ['urn:ietf:params:jmap:core', LINAGORA_CAPABILITIES.calendarEvent],
       methodCalls: [['CalendarEventCounter/accept', { blobIds: ['1_5'] }, 'c0']],
+    });
+  });
+
+  it('gets a download token for a blob with UnauthenticatedBlobAccess/set', async () => {
+    const { client, sent } = makeClient({
+      'UnauthenticatedBlobAccess/set': () => ({
+        accountId: ACCOUNT_ID,
+        created: {
+          '1_2': {
+            token: '5b9a2f7e-3c1d-4e8f-9a6b-0c2d4e6f8a1b',
+            validUntil: '2026-11-26T12:05:00Z',
+          },
+        },
+      }),
+    });
+
+    const response = await client.call('UnauthenticatedBlobAccess/set', {
+      accountId: ACCOUNT_ID,
+      create: { '1_2': {} },
+    });
+
+    expect(response.created?.['1_2']?.token).toBe('5b9a2f7e-3c1d-4e8f-9a6b-0c2d4e6f8a1b');
+    expect(sent()).toMatchObject({
+      methodCalls: [['UnauthenticatedBlobAccess/set', { create: { '1_2': {} } }, 'c0']],
     });
   });
 });
