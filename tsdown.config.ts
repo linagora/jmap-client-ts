@@ -6,7 +6,7 @@ export default defineConfig({
   platform: 'neutral',
   target: 'es2022',
   dts: { tsconfig: 'src/linagora/tsconfig.json' },
-  external: ['jmap-client-ts'],
+  external: ['@linagora/jmap-client-ts'],
   sourcemap: false,
   clean: true,
 });

@@ -1,4 +1,4 @@
-# jmap-client-ts
+# @linagora/jmap-client-ts
 
 Typed [JMAP](https://jmap.io) client for browsers and Node.js 20+.
 
@@ -14,26 +14,22 @@ Typed [JMAP](https://jmap.io) client for browsers and Node.js 20+.
 - Bring your own authentication (Bearer, Basic, cookies) and `fetch`.
 - ESM only, no runtime dependency.
 
-> Version 2 is a rewrite and is not compatible with 1.x. See the
+> Version 2 is a rewrite and is not compatible with 1.x. It is published as
+> `@linagora/jmap-client-ts`; 1.x stays on npm as `jmap-client-ts`. See the
 > [CHANGELOG](CHANGELOG.md) and the [API contract](docs/v2-api.md).
 
 ## Install
 
-```bash
-npm install jmap-client-ts
-```
-
-Until 2.0 is published, install it from git (the `prepare` script builds
-`dist/`):
+Prereleases of 2.0 are published under the `next` tag:
 
 ```bash
-npm install github:linagora/jmap-client-ts#v2
+npm install @linagora/jmap-client-ts@next
 ```
 
 ## Quick start
 
 ```ts
-import { assertSetSucceeded, createClient } from 'jmap-client-ts';
+import { assertSetSucceeded, createClient } from '@linagora/jmap-client-ts';
 
 const client = createClient({
   sessionUrl: 'https://jmap.example.com/jmap/session',
@@ -206,7 +202,7 @@ Server extensions are declared in `JmapMethods`. They are then available in
 and back-references:
 
 ```ts
-import type { GetArgs, GetResponse, Id, SetArgs, SetResponse } from 'jmap-client-ts';
+import type { GetArgs, GetResponse, Id, SetArgs, SetResponse } from '@linagora/jmap-client-ts';
 
 export interface Note {
   id: Id;
@@ -214,7 +210,7 @@ export interface Note {
   body: string;
 }
 
-declare module 'jmap-client-ts' {
+declare module '@linagora/jmap-client-ts' {
   interface JmapMethods {
     'Note/get': {
       capability: 'urn:example:params:jmap:notes';
@@ -263,7 +259,7 @@ Generic helpers for extensions: `GetArgs`, `GetResponse`, `SetArgs`,
 
 ## Linagora extensions
 
-`jmap-client-ts/linagora` declares the methods of
+`@linagora/jmap-client-ts/linagora` declares the methods of
 [tmail-backend](https://github.com/linagora/tmail-backend) (Twake Mail) and
 the James properties it ships, with their types and capabilities:
 
@@ -284,8 +280,11 @@ It also adds `Mailbox.namespace` (James shares) and `Identity.sortOrder`
 `extraCapabilities`).
 
 ```ts
-import { createClient } from 'jmap-client-ts';
-import { LINAGORA_CAPABILITIES, LINAGORA_METHOD_CAPABILITIES } from 'jmap-client-ts/linagora';
+import { createClient } from '@linagora/jmap-client-ts';
+import {
+  LINAGORA_CAPABILITIES,
+  LINAGORA_METHOD_CAPABILITIES,
+} from '@linagora/jmap-client-ts/linagora';
 
 const client = createClient({ sessionUrl, auth, methodCapabilities: LINAGORA_METHOD_CAPABILITIES });
 await client.getSession();

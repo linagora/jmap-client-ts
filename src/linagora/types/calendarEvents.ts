@@ -2,7 +2,7 @@
  * Calendar invitations (`com:linagora:params:calendar:event`): parse the
  * `.ics` blobs of an email and reply to them.
  */
-import type { Id, SetError } from 'jmap-client-ts';
+import type { Id, SetError } from '@linagora/jmap-client-ts';
 
 export interface CalendarEventOrganizer {
   name?: string | null;

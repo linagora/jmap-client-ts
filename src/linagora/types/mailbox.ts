@@ -1,5 +1,5 @@
 /** `Mailbox/clear` (`com:linagora:params:jmap:mailbox:clear`). */
-import type { Id, SetError, UnsignedInt } from 'jmap-client-ts';
+import type { Id, SetError, UnsignedInt } from '@linagora/jmap-client-ts';
 
 export interface MailboxClearArgs {
   accountId: Id;

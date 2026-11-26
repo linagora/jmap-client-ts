@@ -1,5 +1,5 @@
 /**
- * Declares the Linagora methods to jmap-client-ts (declaration merging),
+ * Declares the Linagora methods to @linagora/jmap-client-ts (declaration merging),
  * and the capabilities `createClient` needs to send them.
  */
 import type {
@@ -10,7 +10,7 @@ import type {
   MethodCapability,
   SetArgs,
   SetResponse,
-} from 'jmap-client-ts';
+} from '@linagora/jmap-client-ts';
 
 import type { LINAGORA_CAPABILITIES } from './capabilities.js';
 import type {
@@ -45,7 +45,7 @@ type MailCapability = 'urn:ietf:params:jmap:mail';
 /** Singleton objects (`Forward`, `Settings`) are only updated, never created nor destroyed. */
 type SingletonSetArgs<T> = Omit<SetArgs<T>, 'create' | 'destroy'>;
 
-declare module 'jmap-client-ts' {
+declare module '@linagora/jmap-client-ts' {
   interface Mailbox {
     /**
      * James shares extension (`urn:apache:james:params:jmap:mail:shares`):

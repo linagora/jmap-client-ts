@@ -17,7 +17,7 @@ const sessionUrl = 'https://jmap.example.com/jmap/session';
 const client = createClient({ sessionUrl, methodCapabilities: LINAGORA_METHOD_CAPABILITIES });
 const accountId = 'a1';
 
-describe('jmap-client-ts/linagora', () => {
+describe('@linagora/jmap-client-ts/linagora', () => {
   it('declares its methods to the client', () => {
     expectTypeOf<LinagoraMethodName>().toExtend<JmapMethodName>();
   });

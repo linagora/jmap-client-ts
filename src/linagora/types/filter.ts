@@ -1,5 +1,5 @@
 /** JMAP filters (`com:linagora:params:jmap:filter`): the rules applied to incoming emails. */
-import type { Id } from 'jmap-client-ts';
+import type { Id } from '@linagora/jmap-client-ts';
 
 /**
  * Field a condition reads: `sentDate` takes `isNewerThan` / `isOlderThan`

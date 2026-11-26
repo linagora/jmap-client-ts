@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "types": [],
-    "paths": { "jmap-client-ts": ["../index.ts"] }
+    "paths": { "@linagora/jmap-client-ts": ["../index.ts"] }
   },
   "include": ["."]
 }

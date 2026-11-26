@@ -1,4 +1,4 @@
-# Contributing to jmap-client-ts
+# Contributing to @linagora/jmap-client-ts
 
 Contributions are welcome. Open an issue to report a bug or discuss a change
 before large pull requests.
@@ -52,4 +52,4 @@ npm token is stored in GitHub.
 
 The workflow fails if the tag does not match `package.json`. It runs in the
 `npm` GitHub environment, which must match the trusted publisher configured
-for `jmap-client-ts` on npmjs.com.
+for `@linagora/jmap-client-ts` on npmjs.com.

@@ -17,9 +17,11 @@ export default defineConfig({
         },
       },
       {
-        // `jmap-client-ts/linagora` imports the core types by package name
+        // `@linagora/jmap-client-ts/linagora` imports the core types by package name
         resolve: {
-          alias: { 'jmap-client-ts': fileURLToPath(new URL('src/index.ts', import.meta.url)) },
+          alias: {
+            '@linagora/jmap-client-ts': fileURLToPath(new URL('src/index.ts', import.meta.url)),
+          },
         },
         test: {
           name: 'linagora',

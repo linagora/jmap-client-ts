@@ -2,7 +2,7 @@
  * JMAP Labels (`com:linagora:params:jmap:labels`): user labels, set on
  * emails as keywords.
  */
-import type { Id } from 'jmap-client-ts';
+import type { Id } from '@linagora/jmap-client-ts';
 
 /** `#RRGGBB` (tmail-flutter also accepts `#AARRGGBB`). */
 export type LabelColor = string;

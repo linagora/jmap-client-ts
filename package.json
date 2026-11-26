@@ -1,5 +1,5 @@
 {
-  "name": "jmap-client-ts",
+  "name": "@linagora/jmap-client-ts",
   "version": "2.0.0-alpha.0",
   "description": "Typed JMAP client (RFC 8620, 8621, 8887, 9425, 9007) for browsers and Node",
   "license": "MIT",
@@ -34,6 +34,9 @@
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist"
   ],

@@ -2,7 +2,7 @@
  * Deleted messages vault (`com:linagora:params:jmap:messages:vault`):
  * restore deleted emails into the `Restored-Messages` mailbox.
  */
-import type { Id, UnsignedInt, UTCDate } from 'jmap-client-ts';
+import type { Id, UnsignedInt, UTCDate } from '@linagora/jmap-client-ts';
 
 /** James task statuses (`completed`, not the `done` of the extension's documentation). */
 export type EmailRecoveryStatus =
