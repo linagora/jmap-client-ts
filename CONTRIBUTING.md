@@ -38,3 +38,18 @@ it in the same pull request as any change of the API.
 Commits follow [Conventional Commits](https://www.conventionalcommits.org/)
 (`feat:`, `fix:`, `docs:`, `test:`, `chore:`, …), one subject per commit,
 subject in the imperative mood.
+
+## Publishing
+
+Prereleases are published to npm under the `next` tag by
+`.github/workflows/npm-publish.yml`, with npm trusted publishing (OIDC): no
+npm token is stored in GitHub.
+
+1. Set `version` in `package.json` (for example `2.0.0-alpha.1`) and move the
+   `Unreleased` entries of the changelog under that version.
+2. Create a GitHub release marked as a prerelease, with the tag `v<version>`
+   on the commit to publish.
+
+The workflow fails if the tag does not match `package.json`. It runs in the
+`npm` GitHub environment, which must match the trusted publisher configured
+for `jmap-client-ts` on npmjs.com.
