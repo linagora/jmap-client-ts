@@ -1,30 +1,24 @@
+# Publishes to npm with trusted publishing (OIDC): no npm token is stored in
+# GitHub. The package's trusted publisher on npmjs.com must match this file
+# name and the `npm` environment.
+
 name: Publish to npm
 
 on:
   release:
-    types: [created]
-  push:
-    branches: [v2]
+    types: [published]
 
 permissions:
   contents: read
 
 jobs:
-  check-token:
-    if: github.event_name == 'push'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          registry-url: https://registry.npmjs.org/
-      - run: npm whoami
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
   publish:
-    if: github.event_name == 'release' && github.event.release.prerelease
+    if: github.event.release.prerelease
     runs-on: ubuntu-latest
+    environment: npm
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -32,8 +26,13 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
           registry-url: https://registry.npmjs.org/
+      - name: Check that the tag matches the package version
+        run: |
+          version="$(node -p 'require("./package.json").version')"
+          if [ "$GITHUB_REF_NAME" != "v$version" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match package.json version $version"
+            exit 1
+          fi
       - run: npm ci
       - run: npm test
       - run: npm publish --tag next
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
