@@ -1,5 +1,9 @@
 import { Transport } from './transport';
 
+function requestBody(body: any): any {
+  return body instanceof ArrayBuffer || ArrayBuffer.isView(body) ? body : JSON.stringify(body);
+}
+
 export class XmlHttpRequestTransport implements Transport {
   private xmlHttpRequestConstructor: () => XMLHttpRequest;
 
@@ -46,7 +50,7 @@ export class XmlHttpRequestTransport implements Transport {
 
       request.onload = () => {
         const status = request.status;
-        if (status === 200) {
+        if (status >= 200 && status < 300) {
           resolve(JSON.parse(request.responseText));
         } else {
           reject(new Error(`Request failed, got http status code ${status}`));
@@ -58,7 +62,7 @@ export class XmlHttpRequestTransport implements Transport {
       };
 
       if (body) {
-        request.send(JSON.stringify(body));
+        request.send(requestBody(body));
       } else {
         request.send();
       }
