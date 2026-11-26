@@ -19,4 +19,11 @@ describe('expandUriTemplate', () => {
     );
     expect(expandUriTemplate('/d?x=1{&name}', { name: 'n' })).toBe('/d?x=1&name=n');
   });
+
+  it('scans unclosed braces in linear time', () => {
+    const template = '{'.repeat(100_000);
+    const start = performance.now();
+    expect(expandUriTemplate(template, {})).toBe(template);
+    expect(performance.now() - start).toBeLessThan(100);
+  });
 });

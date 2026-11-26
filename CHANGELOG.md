@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- `expandUriTemplate` scans a template with many unclosed `{` in linear time
+  instead of quadratic time.
+
 ## 2.0.0-alpha.1
 
 ### Added
