@@ -13,7 +13,7 @@ function encodeTemplateValue(value: string): string {
 }
 
 export function expandUriTemplate(template: string, variables: Record<string, string>): string {
-  return template.replace(/\{([?&]?)([^}]+)\}/g, (_match, operator: string, names: string) => {
+  return template.replace(/\{([?&]?)([^{}]+)\}/g, (_match, operator: string, names: string) => {
     const parts = names.split(',').map(name => name.trim());
     if (operator === '') {
       return parts.map(name => encodeTemplateValue(variables[name] ?? '')).join(',');
