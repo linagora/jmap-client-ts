@@ -1,18 +1,5 @@
 # Changelog
 
-## Unreleased
-
-### Added
-
-- `jmap-client-ts/linagora` entry point: tmail-backend methods (`Label`,
-  `Forward`, `Filter`, `Settings`, `EmailRecoveryAction`,
-  `TMailContact/autocomplete`, `PublicAsset`, `Mailbox/clear`,
-  `CalendarEvent`, `CalendarEventAttendance/get`), `LINAGORA_CAPABILITIES`,
-  `LINAGORA_METHOD_CAPABILITIES`, `Mailbox.namespace` and
-  `Identity.sortOrder`.
-- Integration tests of these methods; the integration backend now enables
-  the deleted messages vault.
-
 ## 2.0.0-alpha.0
 
 Complete rewrite. Nothing from 1.x is kept.
@@ -51,3 +38,12 @@ Complete rewrite. Nothing from 1.x is kept.
 - WebSocket push (RFC 8887) with Linagora tickets, reconnection with backoff
   and jitter, optional `Core/echo` ping.
 - Integration tests against `linagora/tmail-backend:memory-1.0.21.2`.
+- `jmap-client-ts/linagora` entry point: tmail-backend methods (`Label`,
+  `Forward`, `Filter`, `Settings`, `EmailRecoveryAction`,
+  `TMailContact/autocomplete`, `PublicAsset`, `Mailbox/clear`,
+  `CalendarEvent`, `CalendarEventAttendance/get`,
+  `CalendarEventCounter/accept`), `LINAGORA_CAPABILITIES`,
+  `LINAGORA_METHOD_CAPABILITIES`, `Mailbox.namespace` and
+  `Identity.sortOrder`.
+- Integration tests of these methods; the integration backend now enables
+  the deleted messages vault.
