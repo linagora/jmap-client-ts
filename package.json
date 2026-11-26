@@ -1,6 +1,6 @@
 {
   "name": "@linagora/jmap-client-ts",
-  "version": "2.0.0-alpha.0",
+  "version": "2.0.0-alpha.1",
   "description": "Typed JMAP client (RFC 8620, 8621, 8887, 9425, 9007) for browsers and Node",
   "license": "MIT",
   "author": "Linagora",
