@@ -4,7 +4,7 @@
     "types": ["node"],
     "isolatedDeclarations": false,
     "declaration": false,
-    "paths": { "jmap-client-ts": ["../../src/index.ts"] }
+    "paths": { "@linagora/jmap-client-ts": ["../../src/index.ts"] }
   },
   "include": ["../../src", "."]
 }

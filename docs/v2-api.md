@@ -1,4 +1,4 @@
-# jmap-client-ts v2 — API contract
+# @linagora/jmap-client-ts v2 — API contract
 
 Status: draft, agreed before implementation. The Twake Mail React frontend
 (`Crash--/twake-mail-frontend`) is written against this contract in parallel;
@@ -28,7 +28,7 @@ Integration tests run against `linagora/tmail-backend:memory-1.0.21.2`.
 ## Creating a client
 
 ```ts
-import { createClient } from 'jmap-client-ts'
+import { createClient } from '@linagora/jmap-client-ts'
 
 const client = createClient({
   sessionUrl: 'https://jmap.example.com/jmap/session',
@@ -116,7 +116,7 @@ export interface JmapMethods {
 }
 
 // In an app or a companion package:
-declare module 'jmap-client-ts' {
+declare module '@linagora/jmap-client-ts' {
   interface JmapMethods {
     'Label/get': { capability: 'com:linagora:params:jmap:labels'; args: GetArgs<Label>; response: GetResponse<Label> }
   }
@@ -218,10 +218,10 @@ push (`JmapPushNotSupportedError` is emitted on `error`).
 
 EventSource push, PushSubscription, Blob/copy, Sieve.
 
-## Linagora extensions (`jmap-client-ts/linagora`)
+## Linagora extensions (`@linagora/jmap-client-ts/linagora`)
 
 A second entry point declares the tmail-backend methods through the
-extension mechanism above (`declare module 'jmap-client-ts'`), so importing
+extension mechanism above (`declare module '@linagora/jmap-client-ts'`), so importing
 it makes `methodCapabilities` required; it exports
 `LINAGORA_METHOD_CAPABILITIES` (one entry per method) and
 `LINAGORA_CAPABILITIES` (URNs), plus the object and capability types.

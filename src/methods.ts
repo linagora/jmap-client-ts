@@ -4,7 +4,7 @@
  * declaration merging:
  *
  * ```ts
- * declare module 'jmap-client-ts' {
+ * declare module '@linagora/jmap-client-ts' {
  *   interface JmapMethods {
  *     'Label/get': {
  *       capability: 'com:linagora:params:jmap:labels';

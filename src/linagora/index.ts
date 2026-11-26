@@ -1,10 +1,10 @@
 /**
- * Linagora (tmail-backend) and James extensions for jmap-client-ts.
+ * Linagora (tmail-backend) and James extensions for @linagora/jmap-client-ts.
  * Importing this entry point declares their methods to the client:
  *
  * ```ts
- * import { createClient } from 'jmap-client-ts';
- * import { LINAGORA_CAPABILITIES, LINAGORA_METHOD_CAPABILITIES } from 'jmap-client-ts/linagora';
+ * import { createClient } from '@linagora/jmap-client-ts';
+ * import { LINAGORA_CAPABILITIES, LINAGORA_METHOD_CAPABILITIES } from '@linagora/jmap-client-ts/linagora';
  *
  * const client = createClient({ sessionUrl, auth, methodCapabilities: LINAGORA_METHOD_CAPABILITIES });
  * if (client.hasCapability(LINAGORA_CAPABILITIES.labels)) {

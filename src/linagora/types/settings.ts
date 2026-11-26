@@ -1,5 +1,5 @@
 /** JMAP settings (`com:linagora:params:jmap:settings`): per-user key-value settings. */
-import type { Id } from 'jmap-client-ts';
+import type { Id } from '@linagora/jmap-client-ts';
 
 /** Setting keys documented by tmail-backend or used by tmail-flutter. */
 export type KnownSettingKey =

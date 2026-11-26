@@ -2,7 +2,7 @@
  * Public assets (`com:linagora:params:jmap:public:assets`): uploaded images
  * served without authentication, for signatures.
  */
-import type { Id, UnsignedInt } from 'jmap-client-ts';
+import type { Id, UnsignedInt } from '@linagora/jmap-client-ts';
 
 export interface PublicAsset {
   id: Id;

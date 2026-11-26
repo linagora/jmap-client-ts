@@ -6,6 +6,7 @@ Complete rewrite. Nothing from 1.x is kept.
 
 ### Breaking changes
 
+- Published as `@linagora/jmap-client-ts` (1.x stays as `jmap-client-ts`).
 - ESM only, Node.js 20+ or browsers. The `Client` class, the transports
   (`FetchTransport`, `AxiosTransport`, `XmlHttpRequestTransport`) and the
   per-method helpers (`mailbox_get`, `email_set`, …) are removed.
@@ -38,7 +39,7 @@ Complete rewrite. Nothing from 1.x is kept.
 - WebSocket push (RFC 8887) with Linagora tickets, reconnection with backoff
   and jitter, optional `Core/echo` ping.
 - Integration tests against `linagora/tmail-backend:memory-1.0.21.2`.
-- `jmap-client-ts/linagora` entry point: tmail-backend methods (`Label`,
+- `@linagora/jmap-client-ts/linagora` entry point: tmail-backend methods (`Label`,
   `Forward`, `Filter`, `Settings`, `EmailRecoveryAction`,
   `TMailContact/autocomplete`, `PublicAsset`, `Mailbox/clear`,
   `CalendarEvent`, `CalendarEventAttendance/get`,
