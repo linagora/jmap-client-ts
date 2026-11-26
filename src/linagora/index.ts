@@ -22,6 +22,7 @@ export type {
   MessagesVaultCapability,
   PublicAssetsCapability,
   SettingsCapability,
+  UnauthenticatedBlobAccessCapability,
 } from './capabilities.js';
 export { LINAGORA_METHOD_CAPABILITIES } from './methodCapabilities.js';
 export type { LinagoraMethodCapabilities, LinagoraMethodName } from './methods.js';
@@ -34,3 +35,4 @@ export type * from './types/labels.js';
 export type * from './types/mailbox.js';
 export type * from './types/publicAssets.js';
 export type * from './types/settings.js';
+export type * from './types/unauthenticatedBlobAccess.js';

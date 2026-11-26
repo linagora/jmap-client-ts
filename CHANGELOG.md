@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- `UnauthenticatedBlobAccess/set` and its capability
+  (`com:linagora:params:jmap:unauthenticated:blob:access`) in the Linagora
+  entry: a short-lived token to download a blob without authentication.
+
 ## 2.0.0-alpha.0
 
 Complete rewrite. Nothing from 1.x is kept.

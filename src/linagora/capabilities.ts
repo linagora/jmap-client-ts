@@ -19,6 +19,8 @@ export const LINAGORA_CAPABILITIES = {
   contactAutocomplete: 'com:linagora:params:jmap:contact:autocomplete',
   /** `PublicAsset/*` */
   publicAssets: 'com:linagora:params:jmap:public:assets',
+  /** `UnauthenticatedBlobAccess/set` */
+  unauthenticatedBlobAccess: 'com:linagora:params:jmap:unauthenticated:blob:access',
   /** `Mailbox/clear` */
   mailboxClear: 'com:linagora:params:jmap:mailbox:clear',
   /** `CalendarEvent/*` and `CalendarEventAttendance/get` */
@@ -74,6 +76,13 @@ export interface MessagesVaultCapability {
 export interface PublicAssetsCapability {
   /** Quota of public assets, in bytes. */
   publicAssetTotalSize?: number;
+}
+
+/** Capability object of `com:linagora:params:jmap:unauthenticated:blob:access`. */
+export interface UnauthenticatedBlobAccessCapability {
+  /** URL template with `{accountId}`, `{blobId}` and `{token}`. */
+  endpoint: string;
+  tokenTtlInSeconds: number;
 }
 
 /** Capability object of `com:linagora:params:jmap:contact:autocomplete`. */

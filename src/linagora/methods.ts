@@ -38,6 +38,10 @@ import type { Label, LabelCreate } from './types/labels.js';
 import type { MailboxClearArgs, MailboxClearResponse } from './types/mailbox.js';
 import type { PublicAsset, PublicAssetCreate } from './types/publicAssets.js';
 import type { Settings } from './types/settings.js';
+import type {
+  UnauthenticatedBlobAccessSetArgs,
+  UnauthenticatedBlobAccessSetResponse,
+} from './types/unauthenticatedBlobAccess.js';
 
 type Capabilities = typeof LINAGORA_CAPABILITIES;
 type MailCapability = 'urn:ietf:params:jmap:mail';
@@ -139,6 +143,11 @@ declare module '@linagora/jmap-client-ts' {
       args: SetArgs<PublicAsset, PublicAssetCreate>;
       response: SetResponse<PublicAsset>;
     };
+    'UnauthenticatedBlobAccess/set': {
+      capability: Capabilities['unauthenticatedBlobAccess'];
+      args: UnauthenticatedBlobAccessSetArgs;
+      response: UnauthenticatedBlobAccessSetResponse;
+    };
     'Mailbox/clear': {
       // tmail-backend also asks for the mail capability
       capability: Capabilities['mailboxClear'] | MailCapability;
@@ -195,6 +204,7 @@ export type LinagoraMethodName =
   | 'TMailContact/autocomplete'
   | 'PublicAsset/get'
   | 'PublicAsset/set'
+  | 'UnauthenticatedBlobAccess/set'
   | 'Mailbox/clear'
   | 'CalendarEvent/parse'
   | 'CalendarEvent/accept'

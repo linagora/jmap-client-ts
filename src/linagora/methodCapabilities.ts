@@ -11,6 +11,7 @@ const {
   messagesVault,
   publicAssets,
   settings,
+  unauthenticatedBlobAccess,
 } = LINAGORA_CAPABILITIES;
 
 /**
@@ -36,6 +37,7 @@ export const LINAGORA_METHOD_CAPABILITIES: LinagoraMethodCapabilities = {
   'TMailContact/autocomplete': contactAutocomplete,
   'PublicAsset/get': publicAssets,
   'PublicAsset/set': publicAssets,
+  'UnauthenticatedBlobAccess/set': unauthenticatedBlobAccess,
   'Mailbox/clear': [mailboxClear, 'urn:ietf:params:jmap:mail'],
   'CalendarEvent/parse': calendarEvent,
   'CalendarEvent/accept': calendarEvent,

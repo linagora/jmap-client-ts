@@ -230,7 +230,8 @@ it makes `methodCapabilities` required; it exports
   `Settings/get|set`, `EmailRecoveryAction/get|set`,
   `TMailContact/autocomplete`, `PublicAsset/get|set`, `Mailbox/clear`,
   `CalendarEvent/parse|accept|reject|maybe`, `CalendarEventAttendance/get`,
-  `CalendarEventCounter/accept` (with `counterSupport`).
+  `CalendarEventCounter/accept` (with `counterSupport`),
+  `UnauthenticatedBlobAccess/set` (`create` only, no state).
 - `Mailbox.namespace` (James shares) and `Identity.sortOrder` (James).
 - Singletons (`Forward`, `Settings`): `/set` without `create` nor `destroy`.
   `Filter/set` takes `update: { singleton: Rule[] }` (the whole list, each
